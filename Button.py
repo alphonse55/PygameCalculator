@@ -24,8 +24,8 @@ class Button:
         pygame.draw.rect(screen, self.color_2, [self.x_i, self.y_i, self.width, self.height])
         screen.blit(self.text_render, self.text_rect)
 
-    def func(self, op, op_scorsa, ans):
-        return self.action(op, op_scorsa, ans, **self.args)
+    def func(self, operation, last_operation, ans):
+        return self.action(operation, last_operation, ans, **self.args)
 
     def mouse_on_button(self, mouse):
         return self.x_i <= mouse[0] <= self.x_i + self.width and self.y_i <= mouse[1] <= self.y_i + self.height
