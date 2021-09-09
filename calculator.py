@@ -60,11 +60,17 @@ uguale = Button(6 * MARGINE + 4 * LATO_NUMERI, ALTEZZA - 3 * MARGINE - 2 * LATO_
 meno = Button(6 * MARGINE + 4 * LATO_NUMERI, ALTEZZA - 4 * MARGINE - 3 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, "-", BLU_SCURO, BLU, WHITE, font_40, actions.segno, segno="-")
 diviso = Button(6 * MARGINE + 4 * LATO_NUMERI, ALTEZZA - 5 * MARGINE - 4 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, "/", BLU_SCURO, BLU, WHITE, font_40, actions.segno, segno="/")
 
+
 canc = Button(2 * MARGINE, ALTEZZA - 6 * MARGINE - 5 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, "Canc", ROSSO_SCURO, ROSSO, WHITE, font_40, actions.canc)
 DEL = Button(3 * MARGINE + LATO_NUMERI, ALTEZZA - 6 * MARGINE - 5 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, "DEL", DARK_GREY, GREY, WHITE, font_40, actions.delete)
 sinistra = Button(4 * MARGINE + 2 * LATO_NUMERI, ALTEZZA - 6 * MARGINE - 5 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, "(", DARK_GREY, GREY, WHITE, font_40, actions.sinistra)
 destra = Button(5 * MARGINE + 3 * LATO_NUMERI, ALTEZZA - 6 * MARGINE - 5 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, ")", DARK_GREY, GREY, WHITE, font_40, actions.destra)
 altro = Button(6 * MARGINE + 4 * LATO_NUMERI, ALTEZZA - 6 * MARGINE - 5 * LATO_NUMERI, LATO_NUMERI, LATO_NUMERI, "2nd", DARK_GREY, GREY, WHITE, font_40, actions.altro)
+
+# ^2,    ^3,    e^    # e,    pi
+# root,  3root, yroot # !,    *10^
+# sin,   cos,   tan   # ln,   logy
+# sin-1, cos-1, tan-1 # log2, log10
 
 bottoni_1st = [zero, virgola, uno, due, tre, quattro, cinque, sei, sette, otto, nove, ans, potenza, più, per, uguale, meno, diviso, canc, DEL, sinistra, destra, altro]
 bottoni_2nd = [canc, DEL, sinistra, destra, altro]
@@ -90,15 +96,12 @@ while gioco:
                         screen.fill(BLACK)
                         if buttons == bottoni_1st:
                             buttons = bottoni_2nd
-                            button.text = "1st"
+                            button.text = "BACK"
                         else:
                             buttons = bottoni_1st
                             button.text = "2nd"
                     else:
                         operazione, operazione_scorsa, answer = button.func(operazione, operazione_scorsa, answer)
-                        if operazione == answer:
-                            operazione_scorsa += answer
-                            operazione = ""
                     break
 
     try:

@@ -33,10 +33,11 @@ def segno(op, op_scorsa, ans, segno):
     return op, op_scorsa, ans
 
 def uguale(op, op_scorsa, ans, OPERATORS):
-    if op != "" and op[-1] in [str(i) for i in range(10)]:
-        op_scorsa = op + "="
-        op = solve(op, OPERATORS)
-        ans = op
+    try:
+        ans = solve(op, OPERATORS)
+        op_scorsa = op + "=" + ans
+        op = ""
+    finally:
         return op, op_scorsa, ans
 
 def ans(op, op_scorsa, ans, OPERATORS):
