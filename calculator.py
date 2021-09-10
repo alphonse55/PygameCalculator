@@ -99,7 +99,7 @@ while game:
                             buttons = buttons_1
                             button.text = "2nd"
                     else:
-                        operation, last_operation, answer = button.func(operation, last_operation, answer)
+                        operation, last_operation, answer = button.action(operation, last_operation, answer, **button.args)
                     break
 
     try:

@@ -1,4 +1,21 @@
 def solve(operation, OPERATORS):
+    # print(operation)
+    for i in range(len(operation)):
+        if operation[i] == "(":
+            left_counter = 1
+            right_counter = 0
+            for j in range(i+1, len(operation)):
+                if operation[j] == "(":
+                    left_counter += 1
+                elif operation[j] == ")":
+                    right_counter += 1
+                    if right_counter == left_counter:
+                        break
+            print(operation[:i])
+            print(operation[i+1:j])
+            print(operation[j+1:])
+            # print(solve(operation[:i] + solve(operation[i+1:j], OPERATORS) + operation[j+1:], OPERATORS))
+            return solve(operation[:i] + solve(operation[i+1:j], OPERATORS) + operation[j+1:], OPERATORS)
     operators = []
     operators_pos = []
     to_pop = []
@@ -56,12 +73,13 @@ def solve(operation, OPERATORS):
             operation.pop(i + 1 - len(to_pop))
             to_pop.append(i)
 
-    operation = str(operation[0])
-    if operation[-2:] == ".0":
-        operation = operation[0:-2]
-    split = operation.split("e")
-    if len(split) == 1:
-        operation = split[0]
-    else:
-        operation = split[0] + "x10^" + split[1][1:]
+    split_e = str(operation[0]).split("e")
+    operation = split_e[0]
+
+    if len(split_point := operation.split(".")) > 1:
+        operation = split_point[0] + "." + split_point[1][:4]
+
+    if len(split_e) > 1:
+        operation += "x10^" + split_e[1][1:]
+
     return operation
