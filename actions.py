@@ -9,7 +9,7 @@ def number(operation, last_operation, answer, n):
     return operation, last_operation, answer
 
 def constant(operation, last_operation, answer, n):
-    if len(operation) == 0 or operation[-1] in OPERATORS:
+    if len(operation) == 0 or operation[-1] in OPERATORS + ["("]:
         operation += str(n)
     return operation, last_operation, answer
 
@@ -49,7 +49,7 @@ def equals(operation, last_operation, answer):
         return operation, last_operation, answer
 
 def ans(operation, last_operation, answer):
-    if len(operation) == 0 or operation[-1] in OPERATORS:
+    if len(operation) == 0 or operation[-1] in OPERATORS + ["("]:
         operation += str(answer)
     return operation, last_operation, answer
 
@@ -62,7 +62,13 @@ def left(operation, last_operation, answer):
     return operation, last_operation, answer
 
 def right(operation, last_operation, answer):
-    if len(operation) > 0 and operation[-1] not in OPERATORS + ["("]:
+    counter = 0
+    for c in operation:
+        if c == "(":
+            counter += 1
+        elif c == ")":
+            counter -= 1
+    if counter > 0 and operation[-1] not in OPERATORS + ["("]:
         operation += ")"
     return operation, last_operation, answer
 
