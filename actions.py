@@ -1,12 +1,22 @@
 from solve import solve
 
-def number(operation, last_operation, ans, n):
-    return operation+str(n), last_operation, ans
+NUMBERS = '1234567890'
+OPERATORS = ["+", "-", "x", "/", "^"]
 
-def canc(operation, last_operation, ans):
-    return "", "", ans
+def number(operation, last_operation, answer, n):
+    if len(operation) == 0 or operation[-1] != ")":
+        operation += str(n)
+    return operation, last_operation, answer
 
-def decimal_point(operation, last_operation, ans, OPERATORS):
+def constant(operation, last_operation, answer, n):
+    if len(operation) == 0 or operation[-1] in OPERATORS:
+        operation += str(n)
+    return operation, last_operation, answer
+
+def canc(operation, last_operation, answer):
+    return "", "", answer
+
+def decimal_point(operation, last_operation, answer):
     sign = False
     last_decimal_point = -1
     for i in range(len(operation)):
@@ -18,38 +28,45 @@ def decimal_point(operation, last_operation, ans, OPERATORS):
         for i in range(last_decimal_point, len(operation)):
             if operation[i] in OPERATORS:
                 sign = True
-    
-    if operation != "" and operation[-1] in [str(i) for i in range(10)] and sign:
+    if operation != "" and operation[-1] in NUMBERS and sign:
         operation += "."
-        
-    return operation, last_operation, ans
+    return operation, last_operation, answer
 
-def delete(operation, last_operation, ans):
-    return operation[:-1], last_operation, ans
+def delete(operation, last_operation, answer):
+    return operation[:-1], last_operation, answer
 
-def sign(operation, last_operation, ans, segno):
-    if operation != "" and operation[-1] in [str(i) for i in range(10)] + [")"]:
-        operation += segno
-    return operation, last_operation, ans
+def sign(operation, last_operation, answer, sign):
+    if operation != "" and operation[-1] in NUMBERS + ")":
+        operation += sign
+    return operation, last_operation, answer
 
-def equals(operation, last_operation, ans, OPERATORS):
+def equals(operation, last_operation, answer):
     try:
-        ans = solve(operation, OPERATORS)
-        last_operation = operation + "=" + ans
+        answer = solve(operation, OPERATORS)
+        last_operation = operation + "=" + answer
         operation = ""
     finally:
-        return operation, last_operation, ans
+        return operation, last_operation, answer
 
-def ans(operation, last_operation, ans, OPERATORS):
+def ans(operation, last_operation, answer):
     if len(operation) == 0 or operation[-1] in OPERATORS:
-        operation += str(ans)
-    return operation, last_operation, ans
+        operation += str(answer)
+    return operation, last_operation, answer
 
-def other(operation, last_operation, ans):
-    return operation, last_operation, ans
+def other(operation, last_operation, answer):
+    return operation, last_operation, answer
 
-def left(operation, last_operation, ans):
-    return operation + "(", last_operation, ans
+def left(operation, last_operation, answer):
+    if len(operation) == 0 or operation[-1] in OPERATORS + ["("]:
+        operation += "("
+    return operation, last_operation, answer
 
-def right(operation, last_operation, ans):
-    return operation + ")", last_operation, ans
+def right(operation, last_operation, answer):
+    if len(operation) > 0 and operation[-1] not in OPERATORS + ["("]:
+        operation += ")"
+    return operation, last_operation, answer
+
+def func(operation, last_operation, answer, name):
+    if len(operation) == 0 or operation[-1] in OPERATORS:
+        operation += name + "("
+    return operation, last_operation, answer

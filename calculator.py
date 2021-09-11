@@ -9,10 +9,9 @@ last_operation = ""
 answer = ""
 
 # caps because constants
-OPERATORS = ["+", "-", "x", "/", "^"]
 WIDTH, HEIGHT, FPS = 500, 700, 60  # display
-BUTTON_WIDTH = 95  # side length of square buttons
-MARGIN = (WIDTH - 5 * BUTTON_WIDTH) / 8 # margin between buttons, depends on the width so it can be changed easily
+SIDE_LENGTH = 95
+MARGIN = (WIDTH - 5 * SIDE_LENGTH) / 8 # margin between buttons, depends on the width so it can be changed easily
 
 # COLORS
 BLACK = (0, 0, 0)
@@ -37,41 +36,49 @@ font_50 = pygame.font.Font(None, 50)
 font_60 = pygame.font.Font(None, 60)
 screen.fill(BLACK)
 
-zero = Button(2 * MARGIN, HEIGHT - 2 * MARGIN - BUTTON_WIDTH, 2 * BUTTON_WIDTH + MARGIN, BUTTON_WIDTH, "0", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=0)
-decimal_point = Button(4 * MARGIN + 2 * BUTTON_WIDTH, HEIGHT - 2 * MARGIN - BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, ".", GREY, LIGHT_GREY, WHITE, font_40, actions.decimal_point, OPERATORS=OPERATORS)
+grid = [[(2 * MARGIN + x * (MARGIN + SIDE_LENGTH), HEIGHT - 2 * MARGIN - SIDE_LENGTH - (4 - y) * (MARGIN + SIDE_LENGTH), SIDE_LENGTH, SIDE_LENGTH) for x in range(5)] for y in range(5)]
+std_button = (GREY, LIGHT_GREY, WHITE, font_40)
 
-one = Button(2 * MARGIN, HEIGHT - 3 * MARGIN - 2 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "1", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=1)
-two = Button(3 * MARGIN + BUTTON_WIDTH, HEIGHT - 3 * MARGIN - 2 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "2", GREY,LIGHT_GREY, WHITE, font_40, actions.number, n=2)
-three = Button(4 * MARGIN + 2 * BUTTON_WIDTH, HEIGHT - 3 * MARGIN - 2 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "3", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=3)
-four = Button(2 * MARGIN, HEIGHT - 4 * MARGIN - 3 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "4", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=4)
-five = Button(3 * MARGIN + BUTTON_WIDTH, HEIGHT - 4 * MARGIN - 3 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "5", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=5)
-six = Button(4 * MARGIN + 2 * BUTTON_WIDTH, HEIGHT - 4 * MARGIN - 3 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "6", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=6)
-seven = Button(2 * MARGIN, HEIGHT - 5 * MARGIN - 4 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "7", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=7)
-eight = Button(3 * MARGIN + BUTTON_WIDTH, HEIGHT - 5 * MARGIN - 4 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "8", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=8)
-nine = Button(4 * MARGIN + 2 * BUTTON_WIDTH, HEIGHT - 5 * MARGIN - 4 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "9", GREY, LIGHT_GREY, WHITE, font_40, actions.number, n=9)
+zero = Button(2 * MARGIN, HEIGHT - 2 * MARGIN - SIDE_LENGTH, 2 * SIDE_LENGTH + MARGIN, SIDE_LENGTH, "0", *std_button, actions.number, n=0)
+decimal_point = Button(*grid[4][2], ".", *std_button, actions.decimal_point)
 
-ans = Button(5 * MARGIN + 3 * BUTTON_WIDTH, HEIGHT - 2 * MARGIN - BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "Ans", DARK_BLUE, BLUE, WHITE, font_40, actions.ans, OPERATORS=OPERATORS)
-power = Button(5 * MARGIN + 3 * BUTTON_WIDTH, HEIGHT - 3 * MARGIN - 2 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "^", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, segno="^")
-plus = Button(5 * MARGIN + 3 * BUTTON_WIDTH,HEIGHT - 4 * MARGIN - 3 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "+", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, segno="+")
-times = Button(5 * MARGIN + 3 * BUTTON_WIDTH, HEIGHT - 5 * MARGIN - 4 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "x", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, segno="x")
-equals = Button(6 * MARGIN + 4 * BUTTON_WIDTH, HEIGHT - 3 * MARGIN - 2 * BUTTON_WIDTH, BUTTON_WIDTH, 2 * BUTTON_WIDTH + MARGIN, "=", DARK_BLUE, BLUE, WHITE, font_40, actions.equals, OPERATORS=OPERATORS)
-minus = Button(6 * MARGIN + 4 * BUTTON_WIDTH, HEIGHT - 4 * MARGIN - 3 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "-", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, segno="-")
-divided = Button(6 * MARGIN + 4 * BUTTON_WIDTH, HEIGHT - 5 * MARGIN - 4 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "/", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, segno="/")
+one = Button(*grid[3][0], "1", *std_button, actions.number, n=1)
+two = Button(*grid[3][1], "2", *std_button, actions.number, n=2)
+three = Button(*grid[3][2], "3", *std_button, actions.number, n=3)
+four = Button(*grid[2][0], "4", *std_button, actions.number, n=4)
+five = Button(*grid[2][1], "5", *std_button, actions.number, n=5)
+six = Button(*grid[2][2], "6", *std_button, actions.number, n=6)
+seven = Button(*grid[1][0], "7", *std_button, actions.number, n=7)
+eight = Button(*grid[1][1], "8", *std_button, actions.number, n=8)
+nine = Button(*grid[1][2], "9", *std_button, actions.number, n=9)
+
+ans = Button(*grid[4][3], "Ans", DARK_BLUE, BLUE, WHITE, font_40, actions.ans)
+power = Button(*grid[3][3], "^", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="^")
+plus = Button(*grid[2][3], "+", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="+")
+times = Button(*grid[1][3], "x", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="x")
+equals = Button(6 * MARGIN + 4 * SIDE_LENGTH, HEIGHT - 3 * MARGIN - 2 * SIDE_LENGTH, SIDE_LENGTH, 2 * SIDE_LENGTH + MARGIN, "=", DARK_BLUE, BLUE, WHITE, font_40, actions.equals)
+minus = Button(*grid[2][4], "-", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="-")
+divided = Button(*grid[1][4], "/", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="/")
 
 
-canc = Button(2 * MARGIN, HEIGHT - 6 * MARGIN - 5 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "Canc", DARK_RED, RED, WHITE, font_40, actions.canc)
-DEL = Button(3 * MARGIN + BUTTON_WIDTH, HEIGHT - 6 * MARGIN - 5 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "DEL", DARK_GREY, GREY, WHITE, font_40, actions.delete)
-left_bracket = Button(4 * MARGIN + 2 * BUTTON_WIDTH, HEIGHT - 6 * MARGIN - 5 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "(", DARK_GREY, GREY, WHITE, font_40, actions.left)
-right_bracket = Button(5 * MARGIN + 3 * BUTTON_WIDTH, HEIGHT - 6 * MARGIN - 5 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, ")", DARK_GREY, GREY, WHITE, font_40, actions.right)
-other = Button(6 * MARGIN + 4 * BUTTON_WIDTH, HEIGHT - 6 * MARGIN - 5 * BUTTON_WIDTH, BUTTON_WIDTH, BUTTON_WIDTH, "2nd", DARK_GREY, GREY, WHITE, font_40, actions.other)
+canc = Button(*grid[0][0], "Canc", DARK_RED, RED, WHITE, font_40, actions.canc)
+DEL = Button(*grid[0][1], "DEL", DARK_GREY, GREY, WHITE, font_40, actions.delete)
+left_bracket = Button(*grid[0][2], "(", DARK_GREY, GREY, WHITE, font_40, actions.left)
+right_bracket = Button(*grid[0][3], ")", DARK_GREY, GREY, WHITE, font_40, actions.right)
+other = Button(*grid[0][4], "2nd", DARK_GREY, GREY, WHITE, font_40, actions.other)
 
+pi = Button(*grid[1][0], "π", *std_button, actions.constant, n="3.1416")
+e = Button(*grid[1][1], "e", *std_button, actions.constant, n="2.1828")
+e_power = Button(*grid[1][2], "e^", *std_button, actions.constant, n="2.1828^")
+square = Button(*grid[1][3], "x^2", *std_button, actions.sign, sign="^2")
+cube = Button(*grid[1][4], "x^3", *std_button, actions.sign, sign="^3")
 # ^2,    ^3,    e^    # e,    pi
 # root,  3root, yroot # !,    *10^
 # sin,   cos,   tan   # ln,   logy
 # sin-1, cos-1, tan-1 # log2, log10
 
 buttons_1 = [zero, decimal_point, one, two, three, four, five, six, seven, eight, nine, ans, power, plus, times, equals, minus, divided, canc, DEL, left_bracket, right_bracket, other]
-buttons_2 = [canc, DEL, left_bracket, right_bracket, other]
+buttons_2 = [canc, DEL, left_bracket, right_bracket, other, pi, e, e_power, square, cube]
 buttons = buttons_1
 
 while game:
@@ -113,13 +120,13 @@ while game:
         except NameError:
             pass
         last_operation_render = font_40.render(last_operation, True, WHITE)
-        last_operation_rect = last_operation_render.get_rect(bottomright=(WIDTH - 3 * MARGIN, HEIGHT - 6 * BUTTON_WIDTH - 9 * MARGIN))
+        last_operation_rect = last_operation_render.get_rect(bottomright=(WIDTH - 3 * MARGIN, HEIGHT - 6 * SIDE_LENGTH - 9 * MARGIN))
         screen.blit(last_operation_render, last_operation_rect)
     except NameError:
         pass
 
     operation_render = font_60.render(operation, True, WHITE)
-    operation_rect = operation_render.get_rect(bottomright=(WIDTH - 3 * MARGIN, HEIGHT - 9 * MARGIN - 5 * BUTTON_WIDTH))
+    operation_rect = operation_render.get_rect(bottomright=(WIDTH - 3 * MARGIN, HEIGHT - 9 * MARGIN - 5 * SIDE_LENGTH))
     screen.blit(operation_render, operation_rect)
 
     pygame.display.update()
