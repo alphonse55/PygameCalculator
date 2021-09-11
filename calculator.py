@@ -36,10 +36,15 @@ font_50 = pygame.font.Font(None, 50)
 font_60 = pygame.font.Font(None, 60)
 screen.fill(BLACK)
 
-grid = [[(2 * MARGIN + x * (MARGIN + SIDE_LENGTH), HEIGHT - 2 * MARGIN - SIDE_LENGTH - (4 - y) * (MARGIN + SIDE_LENGTH), SIDE_LENGTH, SIDE_LENGTH) for x in range(5)] for y in range(5)]
 std_button = (GREY, LIGHT_GREY, WHITE, font_40)
+grid = [[(2 * MARGIN + x * (MARGIN + SIDE_LENGTH), HEIGHT - 2 * MARGIN - SIDE_LENGTH - (4 - y) * (MARGIN + SIDE_LENGTH), SIDE_LENGTH, SIDE_LENGTH) for x in range(5)] for y in range(5)]
 
-zero = Button(2 * MARGIN, HEIGHT - 2 * MARGIN - SIDE_LENGTH, 2 * SIDE_LENGTH + MARGIN, SIDE_LENGTH, "0", *std_button, actions.number, n=0)
+def merge(x1, y1, w1, h1, x2, y2, w2, h2):
+    tot_width = (x2 + w2) - x1
+    tot_height = (y2 + h2) - y1
+    return (x1, y1, tot_width, tot_height)
+
+zero = Button(*merge(*grid[4][0], *grid[4][1]), "0", *std_button, actions.number, n=0)
 decimal_point = Button(*grid[4][2], ".", *std_button, actions.decimal_point)
 
 one = Button(*grid[3][0], "1", *std_button, actions.number, n=1)
@@ -56,7 +61,7 @@ ans = Button(*grid[4][3], "Ans", DARK_BLUE, BLUE, WHITE, font_40, actions.ans)
 power = Button(*grid[3][3], "^", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="^")
 plus = Button(*grid[2][3], "+", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="+")
 times = Button(*grid[1][3], "x", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="x")
-equals = Button(6 * MARGIN + 4 * SIDE_LENGTH, HEIGHT - 3 * MARGIN - 2 * SIDE_LENGTH, SIDE_LENGTH, 2 * SIDE_LENGTH + MARGIN, "=", DARK_BLUE, BLUE, WHITE, font_40, actions.equals)
+equals = Button(*merge(*grid[3][4], *grid[4][4]), "=", DARK_BLUE, BLUE, WHITE, font_40, actions.equals)
 minus = Button(*grid[2][4], "-", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="-")
 divided = Button(*grid[1][4], "/", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="/")
 
