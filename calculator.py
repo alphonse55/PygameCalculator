@@ -62,7 +62,7 @@ power = Button(*grid[3][3], "^", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, 
 plus = Button(*grid[2][3], "+", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="+")
 times = Button(*grid[1][3], "x", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="x")
 equals = Button(*merge(*grid[3][4], *grid[4][4]), "=", DARK_BLUE, BLUE, WHITE, font_40, actions.equals)
-minus = Button(*grid[2][4], "-", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="-")
+minus = Button(*grid[2][4], "-", DARK_BLUE, BLUE, WHITE, font_40, actions.minus)
 divided = Button(*grid[1][4], "/", DARK_BLUE, BLUE, WHITE, font_40, actions.sign, sign="/")
 
 
@@ -77,10 +77,11 @@ e = Button(*grid[1][1], "e", *std_button, actions.constant, n="2.1828")
 e_power = Button(*grid[1][2], "e^", *std_button, actions.constant, n="2.1828^")
 square = Button(*grid[1][3], "x^2", *std_button, actions.sign, sign="^2")
 cube = Button(*grid[1][4], "x^3", *std_button, actions.sign, sign="^3")
-# ^2,    ^3,    e^    # e,    pi
-# root,  3root, yroot # !,    *10^
-# sin,   cos,   tan   # ln,   logy
-# sin-1, cos-1, tan-1 # log2, log10
+
+# pi    e     e^    ^2    ^3
+# root  3root yroot !     *10^
+# sin   cos   tan   ln    logy
+# sin-1 cos-1 tan-1 log2  log10
 
 buttons_1 = [zero, decimal_point, one, two, three, four, five, six, seven, eight, nine, ans, power, plus, times, equals, minus, divided, canc, DEL, left_bracket, right_bracket, other]
 buttons_2 = [canc, DEL, left_bracket, right_bracket, other, pi, e, e_power, square, cube]

@@ -40,9 +40,14 @@ def sign(operation, last_operation, answer, sign):
         operation += sign
     return operation, last_operation, answer
 
+def minus(operation, last_operation, answer):
+    if len(operation) == 0 or not (operation[-1] in OPERATORS and operation[-2] in OPERATORS):
+        operation += "-"
+    return operation, last_operation, answer
+
 def equals(operation, last_operation, answer):
     try:
-        answer = solve(operation, OPERATORS)
+        answer = solve(operation)
         last_operation = operation + "=" + answer
         operation = ""
     finally:
@@ -73,6 +78,6 @@ def right(operation, last_operation, answer):
     return operation, last_operation, answer
 
 def func(operation, last_operation, answer, name):
-    if len(operation) == 0 or operation[-1] in OPERATORS:
+    if len(operation) == 0 or operation[-1] in OPERATORS + ["("]:
         operation += name + "("
     return operation, last_operation, answer

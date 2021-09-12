@@ -1,5 +1,6 @@
-def solve(operation, OPERATORS):
-    # print(operation)
+OPERATORS = ["+", "-", "x", "/", "^"]
+
+def solve(operation):
     for i in range(len(operation)):
         if operation[i] == "(":
             left_counter = 1
@@ -11,18 +12,17 @@ def solve(operation, OPERATORS):
                     right_counter += 1
                     if right_counter == left_counter:
                         break
-            print(operation[:i])
-            print(operation[i+1:j])
-            print(operation[j+1:])
-            # print(solve(operation[:i] + solve(operation[i+1:j], OPERATORS) + operation[j+1:], OPERATORS))
-            return solve(operation[:i] + solve(operation[i+1:j], OPERATORS) + operation[j+1:], OPERATORS)
+            return solve(operation[:i] + solve(operation[i+1:j]) + operation[j+1:])
+
     operators = []
     operators_pos = []
     to_pop = []
+
     for i in range(len(operation)):
         if operation[i] in OPERATORS:
-            operators.append(operation[i])
-            operators_pos.append(i)
+            if i-1 not in operators_pos: # minus sign after another sign
+                operators.append(operation[i])
+                operators_pos.append(i)
     list1 = list(operation)
     for i in operators_pos:
         list1[i] = " "
@@ -33,9 +33,19 @@ def solve(operation, OPERATORS):
     for i in range(len(operation)):
         operation[i] = float(operation[i])
 
+    print(operation)
+
     for i in range(len(operators)):
         if operators[i] == "^":
-            operation[i - len(to_pop)] **= float(operation[i + 1 - len(to_pop)])
+            base = operation[i - len(to_pop)]
+            minus_before_base = False
+            if str(operation[i - len(to_pop)])[0] == "-":
+                minus_before_base = True
+                base *= -1
+            operation[i - len(to_pop)] = base ** float(operation[i + 1 - len(to_pop)])
+            if minus_before_base:
+                operation[i - len(to_pop)] *= -1
+            
             operation.pop(i + 1 - len(to_pop))
             to_pop.append(i)
 
@@ -76,7 +86,11 @@ def solve(operation, OPERATORS):
     split_e = str(operation[0]).split("e")
     operation = split_e[0]
 
-    if len(split_point := operation.split(".")) > 1:
+    # do rounding only if it is the last time solve() is executed
+    split_point = operation.split(".")
+    if int(split_point[1][:4]) == 0:
+        operation = split_point[0]
+    else:
         operation = split_point[0] + "." + split_point[1][:4]
 
     if len(split_e) > 1:
