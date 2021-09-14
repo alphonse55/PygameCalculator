@@ -50,16 +50,18 @@ def sign(operation, last_operation, answer, sign):
     if operation != "" and operation[-1] in NUMBERS + ")":
         operation += sign
         global operation_is_answer
-        last_operation += answer
-        operation_is_answer = False
+        if operation_is_answer:
+            last_operation += answer
+            operation_is_answer = False
     return operation, last_operation, answer
 
 def minus(operation, last_operation, answer):
     if len(operation) == 0 or not (operation[-1] in OPERATORS and operation[-2] in OPERATORS):
         operation += "-"        
         global operation_is_answer
-        last_operation += answer
-        operation_is_answer = False
+        if operation_is_answer:
+            last_operation += answer
+            operation_is_answer = False
     return operation, last_operation, answer
 
 def equals(operation, last_operation, answer):
