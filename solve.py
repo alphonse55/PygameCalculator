@@ -1,6 +1,6 @@
 OPERATORS = ["+", "-", "x", "/", "^"]
 
-def solve(operation):
+def solve(operation, depth = 0):
     for i in range(len(operation)):
         if operation[i] == "(":
             left_counter = 1
@@ -12,7 +12,7 @@ def solve(operation):
                     right_counter += 1
                     if right_counter == left_counter:
                         break
-            return solve(operation[:i] + solve(operation[i+1:j]) + operation[j+1:])
+            return solve(operation[:i] + solve(operation[i+1:j], depth+1) + operation[j+1:], depth)
 
     operators = []
     operators_pos = []
@@ -32,8 +32,6 @@ def solve(operation):
     operation = operation.split()
     for i in range(len(operation)):
         operation[i] = float(operation[i])
-
-    print(operation)
 
     for i in range(len(operators)):
         if operators[i] == "^":
@@ -86,14 +84,16 @@ def solve(operation):
     split_e = str(operation[0]).split("e")
     operation = split_e[0]
 
-    # do rounding only if it is the last time solve() is executed
-    split_point = operation.split(".")
-    if int(split_point[1][:4]) == 0:
-        operation = split_point[0]
-    else:
-        operation = split_point[0] + "." + split_point[1][:4]
+    # do rounding only if there are no brackets, so it is the last time solve() is executed
+    if depth == 0:
+        split_point = operation.split(".")
+        if int(split_point[1][:4]) == 0:
+            operation = split_point[0]
+        else:
+            operation = split_point[0] + "." + split_point[1][:4]
 
     if len(split_e) > 1:
         operation += "x10^" + split_e[1][1:]
-
+    
+    print(operation)
     return operation
