@@ -8,7 +8,7 @@ pygame.display.set_caption("Calculator")
 
 operation = ""
 last_operation = ""
-answer = ""
+result = ""
 
 def change_page(buttons):
     screen.fill(config.BLACK)
@@ -38,7 +38,7 @@ while game:
         elif event.type == pygame.MOUSEBUTTONDOWN:
             for button in config.buttons:
                 if button.mouse_on_button(pos):
-                    operation, last_operation, answer = button.action(operation, last_operation, answer, **button.args)
+                    operation, last_operation, result = button.action(operation, last_operation, result, **button.args)
                     if button == config.other:
                         config.buttons = change_page(config.buttons)
                     break
