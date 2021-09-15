@@ -14,6 +14,9 @@ SIDE_LENGTH = int(width_without_margins/COLUMNS) # convert it to int because if 
 SIDE_MARGIN = (WIDTH - (SIDE_LENGTH * COLUMNS + MARGIN * (COLUMNS - 1))) / 2 # recalculate it to center the buttons perectly because of the int() conversion of SIDE_LENGTH
 MARGIN_OPERATION = 30
 
+NUMBERS = '1234567890'
+OPERATORS = ["+", "-", "x", "/", "^"]
+
 # COLORS
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -26,18 +29,22 @@ DARK_BLUE = (16, 54, 97)
 BLUE = (25, 85, 152)
 
 # fonts
+font_30 = pygame.font.Font(None, 30)
 font_40 = pygame.font.Font(None, 40)
 font_50 = pygame.font.Font(None, 50)
 font_60 = pygame.font.Font(None, 60)
 font_70 = pygame.font.Font(None, 70)
 font_80 = pygame.font.Font(None, 80)
 
+operation_font = font_60
+last_operation_font = font_40
+
 def merge(x1, y1, w1, h1, x2, y2, w2, h2):
     tot_width = (x2 + w2) - x1
     tot_height = (y2 + h2) - y1
     return (x1, y1, tot_width, tot_height)
 
-std_button = (GREY, LIGHT_GREY, WHITE, font_40)
+std_button = (GREY, LIGHT_GREY, WHITE, font_50)
 grid = [[(SIDE_MARGIN + x * (MARGIN + SIDE_LENGTH), HEIGHT - SIDE_MARGIN - SIDE_LENGTH - (ROWS - 1 - y) * (MARGIN + SIDE_LENGTH), SIDE_LENGTH, SIDE_LENGTH) for x in range(COLUMNS)] for y in range(ROWS)]
 
 canc = Button("Canc", DARK_RED, RED, WHITE, font_40, actions.canc)
@@ -118,3 +125,8 @@ for y, row in enumerate(first_page):
             button.x_i, button.y_i, button.width, button.height = merge(b.x_i, b.y_i, b.width, b.height, *grid[y][x])
 
 first_page = buttons
+
+error = False
+
+back = Button("<- back", GREY, LIGHT_GREY, WHITE, font_40, actions.back)
+back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN + MARGIN_OPERATION, MARGIN_OPERATION, 3/2 * SIDE_LENGTH, 1/2 * SIDE_LENGTH

@@ -1,6 +1,23 @@
-OPERATORS = ["+", "-", "x", "/", "^"]
+import config
 
 def solve(operation, depth = 0):
+    def error(message):
+        config.error = True
+        config.operation_font = config.font_30
+        return "Error: " + message
+    
+    if operation[-1] == "(":
+        return error("ending with an open parenthesis")
+
+    elif operation[-1] in config.OPERATORS:
+        return error("ending with an operator")
+
+    counter = 0
+    for c in operation: 
+        counter += 1 if c == "(" else (-1 if c == ")" else 0)
+    if counter != 0:
+        return error("not all parentheses are closed")
+
     for i in range(len(operation)):
         if operation[i] == "(":
             left_counter = 1
@@ -19,7 +36,7 @@ def solve(operation, depth = 0):
     to_pop = []
 
     for i in range(len(operation)):
-        if operation[i] in OPERATORS:
+        if operation[i] in config.OPERATORS:
             if i-1 not in operators_pos: # minus sign after another sign
                 operators.append(operation[i])
                 operators_pos.append(i)
