@@ -84,10 +84,26 @@ def solve(operation, depth = 0):
     split_e = str(operation[0]).split("e")
     operation = split_e[0]
 
-    # do rounding only if there are no brackets, so it is the last time solve() is executed
+    # do rounding only for the first call of solve(), with depth = 0
+    precision = 5
     if depth == 0:
         split_point = operation.split(".")
-        if int(split_point[1][:4]) == 0:
+        for i in range(len(split_point[1])):
+            if split_point[1][i:i + precision] == "0" * precision:
+                if i == 0:
+                    split_point[1] = "0"
+                else:
+                    split_point[1] = split_point[1][:i]
+                break
+            elif split_point[1][i:i + precision] == "9" * precision:
+                if i == 0:
+                    split_point[0] = str(int(split_point[0]) + 1)
+                    split_point[1] = "0"
+                else:
+                    split_point[1] = str(int(split_point[1][:i]) + 1)
+                break
+
+        if split_point[1] == "0":
             operation = split_point[0]
         else:
             operation = split_point[0] + "." + split_point[1][:4]
@@ -95,5 +111,4 @@ def solve(operation, depth = 0):
     if len(split_e) > 1:
         operation += "x10^" + split_e[1][1:]
     
-    print(operation)
     return operation
