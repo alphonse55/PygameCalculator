@@ -85,6 +85,11 @@ def other(operation, last_operation, result):
 def left(operation, last_operation, result):
     if len(operation) == 0 or operation[-1] in OPERATORS + ["("]:
         operation += "("
+    global operation_is_result
+    if operation_is_result:
+        operation = "("
+        last_operation += result
+        operation_is_result = False
     return operation, last_operation, result
 
 def right(operation, last_operation, result):
