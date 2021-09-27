@@ -64,16 +64,14 @@ def minus(operation, last_operation, result):
     return operation, last_operation, result
 
 def equals(operation, last_operation, result):
-    try:
-        result = solve(operation)
-        last_operation = operation
-        if not config.error:
-            last_operation += " = "
-            global operation_is_result
-            operation_is_result = True
-        operation = result
-    finally:
-        return operation, last_operation, result
+    result = solve(operation)
+    last_operation = operation
+    operation = result
+    if not config.error:
+        last_operation += " = "
+        global operation_is_result
+        operation_is_result = True
+    return operation, last_operation, result
 
 def ans(operation, last_operation, result):
     if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
@@ -108,5 +106,5 @@ def func(operation, last_operation, result, name):
 
 def back(operation, last_operation, result):
     config.error = False
-    config.operation_font = config.font_60
+    config.operation_font = config.font[60]
     return last_operation, "", result
