@@ -37,13 +37,17 @@ def delete(operation, result):
         operation = operation[:-1]
     return operation, result
 
-def sign(operation, result, sign):
-    if operation != "" and operation[-1] in config.NUMBERS + ")":
+def operator(operation, result, sign):
+    if config.solved:
+        operation = result + sign
+    elif operation != "" and operation[-1] in config.NUMBERS + ")":
         operation += sign
     return operation, result
 
 def minus(operation, result):
-    if len(operation) == 0 or not (operation[-1] in config.OPERATORS and operation[-2] in config.OPERATORS):
+    if config.solved:
+        operation = result + "-"
+    elif len(operation) == 0 or not (operation[-1] in config.OPERATORS and operation[-2] in config.OPERATORS):
         operation += "-"
     return operation, result
 
@@ -52,7 +56,6 @@ def equals(operation, result):
     config.operations += [[operation, result]]
     config.operation_index = len(config.operations) - 1
     config.solved = True
-    print(config.operations, config.operation_index)
     return operation, result
 
 def ans(operation, result):
@@ -93,7 +96,6 @@ def back(operation, result):
             config.error = False
         config.operation_index -= 1
         stored_operation = config.operations[config.operation_index]
-        print(config.operations, config.operation_index)
         return stored_operation[0], stored_operation[1]
     else:
         return operation, result
@@ -104,7 +106,6 @@ def next(operation, result):
             config.error = False
         config.operation_index += 1
         stored_operation = config.operations[config.operation_index]
-        print(config.operations, config.operation_index)
         return stored_operation[0], stored_operation[1]
     else:
         return operation, result

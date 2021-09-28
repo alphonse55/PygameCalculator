@@ -61,18 +61,18 @@ eight = Button("8", *std_button, actions.number, n=8)
 nine = Button("9", *std_button, actions.number, n=9)
 
 ans = Button("Ans", DARK_BLUE, BLUE, WHITE, font[40], actions.ans)
-power = Button("^", DARK_BLUE, BLUE, WHITE, font[40], actions.sign, sign="^")
-plus = Button("+", DARK_BLUE, BLUE, WHITE, font[40], actions.sign, sign="+")
-times = Button("x", DARK_BLUE, BLUE, WHITE, font[40], actions.sign, sign="x")
+power = Button("^", DARK_BLUE, BLUE, WHITE, font[40], actions.operator, sign="^")
+plus = Button("+", DARK_BLUE, BLUE, WHITE, font[40], actions.operator, sign="+")
+times = Button("x", DARK_BLUE, BLUE, WHITE, font[40], actions.operator, sign="x")
 equals = Button("=", DARK_BLUE, BLUE, WHITE, font[40], actions.equals)
 minus = Button("-", DARK_BLUE, BLUE, WHITE, font[40], actions.minus)
-divided = Button("/", DARK_BLUE, BLUE, WHITE, font[40], actions.sign, sign="/")
+divided = Button("/", DARK_BLUE, BLUE, WHITE, font[40], actions.operator, sign="/")
 
 pi = Button("π", *std_button, actions.constant, n="3.1416")
 e = Button("e", *std_button, actions.constant, n="2.1828")
 e_power = Button("e^", *std_button, actions.constant, n="2.1828^")
-square = Button("x^2", *std_button, actions.sign, sign="^2")
-cube = Button("x^3", *std_button, actions.sign, sign="^3")
+square = Button("x^2", *std_button, actions.operator, sign="^2")
+cube = Button("x^3", *std_button, actions.operator, sign="^3")
 
 # pi    e     e^    ^2    ^3
 # root  3root yroot !     *10^
@@ -131,7 +131,7 @@ buttons += [back, next]
 first_page = buttons
 
 neutral_buttons = [back, next, other]
-resetting_buttons = [b for b in first_page if b.action==actions.number] + [minus, left_bracket, ans, pi, e, e_power]
+resetting_buttons = [b for b in first_page if b.action in [actions.number, actions.operator]] + [minus, left_bracket, ans, pi, e, e_power, canc]
 # illegal_buttons = list((set(first_page) | set(second_page)) - set(neutral_buttons + resetting_buttons))
 
 error = False
