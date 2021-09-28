@@ -4,17 +4,7 @@ def solve(operation, depth = 0):
     # return error message
     def error(message):
         config.error = True
-        message = "Error: " + message
-        
-        for i in range(60):
-            mess_render = config.font[i].render(message, True, config.BLACK)
-            mess_rect = mess_render.get_rect()
-            
-            if mess_rect.width > config.WIDTH - 2 * (config.SIDE_MARGIN+config.MARGIN_OPERATION):
-                break
-            else:
-                config.result_font = config.font[i]
-        return message
+        return "Error: " + message
 
     # possible errors
     if operation == "":
@@ -68,7 +58,7 @@ def solve(operation, depth = 0):
                                 else:
                                     break
                             exponent = int(exponent)
-                            
+
                         elif operation[ind] == "(":
                             counter = 0
                             for k, char in enumerate(operation[ind:]):

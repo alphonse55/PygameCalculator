@@ -18,7 +18,7 @@ while game:
         config.buttons = list(set(config.buttons) - {config.back})
     if config.operation_index >= len(config.operations) - 1:
         config.buttons = list(set(config.buttons) - {config.next})
-        
+
     pos = pygame.mouse.get_pos()
     screen.fill(config.BLACK)
     for button in config.buttons:
@@ -46,14 +46,20 @@ while game:
                         operation, result = button.action(operation, result, **button.args)
                     break
 
-    operation_render = config.operation_font.render(operation, True, config.WHITE)
-    operation_rect = operation_render.get_rect(topleft = (config.SIDE_MARGIN + config.WIDTH_ARROWS + config.MARGIN_OPERATION, config.SIDE_MARGIN + config.MARGIN_OPERATION))
+    for font in config.font[config.MAX_OPERATION_FONT_SIZE::-1]:
+        operation_render = font.render(operation, True, config.WHITE)
+        operation_rect = operation_render.get_rect(topleft = (config.SIDE_MARGIN + config.WIDTH_ARROWS + config.MARGIN_OPERATION, config.SIDE_MARGIN + config.MARGIN_OPERATION))
+        if operation_rect.width < config.MAX_TEXT_WIDTH:
+            break
     pygame.draw.rect(screen, config.BLACK, operation_rect)
     screen.blit(operation_render, operation_rect)
 
     if config.solved:
-        result_render = config.result_font.render(result, True, config.WHITE)
-        result_rect = result_render.get_rect(bottomright = (config.WIDTH - config.SIDE_MARGIN - config.WIDTH_ARROWS - config.MARGIN_OPERATION, config.HEIGHT - 5 * config.SIDE_LENGTH - 4 * config.MARGIN - 2 * config.SIDE_MARGIN - config.MARGIN_OPERATION))
+        for font in config.font[config.MAX_RESULT_FONT_SIZE::-1]:
+            result_render = font.render(result, True, config.WHITE)
+            result_rect = result_render.get_rect(bottomright = (config.WIDTH - config.SIDE_MARGIN - config.WIDTH_ARROWS - config.MARGIN_OPERATION, config.HEIGHT - 5 * config.SIDE_LENGTH - 4 * config.MARGIN - 2 * config.SIDE_MARGIN - config.MARGIN_OPERATION))
+            if result_rect.width < config.MAX_TEXT_WIDTH:
+                break
         pygame.draw.rect(screen, config.BLACK, result_rect)
         screen.blit(result_render, result_rect)
 

@@ -13,6 +13,9 @@ width_without_margins = WIDTH - MARGIN * (COLUMNS - 1) - 2 * SIDE_MARGIN
 SIDE_LENGTH = int(width_without_margins/COLUMNS) # convert it to int because if it is decimal it will add one pixel to one margin at some point
 SIDE_MARGIN = (WIDTH - (SIDE_LENGTH * COLUMNS + MARGIN * (COLUMNS - 1))) / 2 # recalculate it to center the buttons perectly because of the int() conversion of SIDE_LENGTH
 MARGIN_OPERATION = 20
+WIDTH_ARROWS = 30
+
+MAX_TEXT_WIDTH = WIDTH - 2 * (SIDE_MARGIN + WIDTH_ARROWS + MARGIN_OPERATION)
 
 NUMBERS = '1234567890'
 OPERATORS = ["+", "-", "x", "/", "^"]
@@ -29,10 +32,9 @@ DARK_BLUE = (16, 54, 97)
 BLUE = (25, 85, 152)
 
 # fonts
+MAX_OPERATION_FONT_SIZE = 60
+MAX_RESULT_FONT_SIZE = 80
 font = [pygame.font.Font(None, i) for i in range(100)]
-
-operation_font = font[60]
-result_font = font[80]
 
 def merge(x1, y1, w1, h1, x2, y2, w2, h2):
     tot_width = (x2 + w2) - x1
@@ -78,8 +80,6 @@ cube = Button("x^3", *std_button, actions.operator, sign="^3")
 # root  3root yroot !     *10^
 # sin   cos   tan   ln    logy
 # sin-1 cos-1 tan-1 log2  log10
-
-WIDTH_ARROWS = 30
 
 back = Button("<", GREY, LIGHT_GREY, WHITE, font[40], actions.back)
 back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN, SIDE_MARGIN, WIDTH_ARROWS, HEIGHT - 5 * SIDE_LENGTH - 4 * MARGIN - 3 * SIDE_MARGIN
