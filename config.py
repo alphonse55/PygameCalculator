@@ -112,7 +112,6 @@ for y, row in enumerate(second_page):
                     if b == button:
                         break
             button.x_i, button.y_i, button.width, button.height = merge(b.x_i, b.y_i, b.width, b.height, *grid[y][x])
-buttons += [back, next]
 second_page = buttons
 
 buttons = []
@@ -127,7 +126,6 @@ for y, row in enumerate(first_page):
                     if b == button:
                         break
             button.x_i, button.y_i, button.width, button.height = merge(b.x_i, b.y_i, b.width, b.height, *grid[y][x])
-buttons += [back, next]
 first_page = buttons
 
 neutral_buttons = [back, next, other]

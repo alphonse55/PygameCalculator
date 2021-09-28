@@ -13,6 +13,12 @@ clock = pygame.time.Clock()
 game = True
 
 while game:
+    config.buttons = list(set(config.buttons) | {config.back, config.next})
+    if config.operation_index <= 0:
+        config.buttons = list(set(config.buttons) - {config.back})
+    if config.operation_index >= len(config.operations) - 1:
+        config.buttons = list(set(config.buttons) - {config.next})
+        
     pos = pygame.mouse.get_pos()
     screen.fill(config.BLACK)
     for button in config.buttons:
