@@ -1,5 +1,3 @@
-# STORED OPERATIONS
-# PARENTHESIS IN THE EXPONENT
 import config
 
 def solve(operation, depth = 0):
@@ -15,7 +13,7 @@ def solve(operation, depth = 0):
             if mess_rect.width > config.WIDTH - 2 * (config.SIDE_MARGIN+config.MARGIN_OPERATION):
                 break
             else:
-                config.operation_font = config.font[i]
+                config.result_font = config.font[i]
         return message
 
     # possible errors
@@ -69,6 +67,8 @@ def solve(operation, depth = 0):
                                     ind += 1
                                 else:
                                     break
+                            exponent = int(exponent)
+                            
                         elif operation[ind] == "(":
                             counter = 0
                             for k, char in enumerate(operation[ind:]):

@@ -3,28 +3,20 @@ import config
 
 operation_is_result = False
 
-def number(operation, last_operation, result, n):
+def number(operation, result, n):
     if len(operation) == 0 or operation[-1] != ")":
-        global operation_is_result
-        if operation_is_result:
-            operation = str(n)
-            last_operation += result
-            operation_is_result = False
-        else:
-            operation += str(n)
-    return operation, last_operation, result
+        operation += str(n)
+    return operation, result
 
-def constant(operation, last_operation, result, n):
+def constant(operation, result, n):
     if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
         operation += str(n)
-    return operation, last_operation, result
+    return operation, result
 
-def canc(operation, last_operation, result):
-    global operation_is_result
-    operation_is_result = False
-    return "", "", result
+def canc(operation, result):
+    return "", result
 
-def decimal_point(operation, last_operation, result):
+def decimal_point(operation, result):
     last_decimal_point = -1
     sign_after_last_decimal_point = False
     for i in range(len(operation)):
@@ -36,75 +28,83 @@ def decimal_point(operation, last_operation, result):
         for i in range(last_decimal_point, len(operation)):
             if operation[i] in config.OPERATORS:
                 sign_after_last_decimal_point = True
-    if not operation_is_result and sign_after_last_decimal_point and operation != "" and operation[-1] in config.NUMBERS:
+    if sign_after_last_decimal_point and operation != "" and operation[-1] in config.NUMBERS:
         operation += "."
-    return operation, last_operation, result
+    return operation, result
 
-def delete(operation, last_operation, result):
+def delete(operation, result):
     if not operation_is_result:
         operation = operation[:-1]
-    return operation, last_operation, result
+    return operation, result
 
-def sign(operation, last_operation, result, sign):
+def sign(operation, result, sign):
     if operation != "" and operation[-1] in config.NUMBERS + ")":
         operation += sign
-        global operation_is_result
-        if operation_is_result:
-            last_operation += result
-            operation_is_result = False
-    return operation, last_operation, result
+    return operation, result
 
-def minus(operation, last_operation, result):
+def minus(operation, result):
     if len(operation) == 0 or not (operation[-1] in config.OPERATORS and operation[-2] in config.OPERATORS):
-        operation += "-"        
-        global operation_is_result
-        if operation_is_result:
-            last_operation += result
-            operation_is_result = False
-    return operation, last_operation, result
+        operation += "-"
+    return operation, result
 
-def equals(operation, last_operation, result):
+def equals(operation, result):
     result = solve(operation)
-    last_operation = operation
-    operation = result
-    if not config.error:
-        last_operation += " = "
-        global operation_is_result
-        operation_is_result = True
-    return operation, last_operation, result
+    config.operations += [[operation, result]]
+    config.operation_index = len(config.operations) - 1
+    config.solved = True
+    print(config.operations, config.operation_index)
+    return operation, result
 
-def ans(operation, last_operation, result):
+def ans(operation, result):
     if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
         operation += str(result)
-    return operation, last_operation, result
+    return operation, result
 
-def other(operation, last_operation, result):
-    return operation, last_operation, result
+def other(operation, result):
+    if config.buttons == config.first_page:
+        config.other.text = "1st"
+        config.buttons = config.second_page
+    else:
+        config.other.text = "2nd"
+        config.buttons = config.first_page
+    return operation, result
 
-def left(operation, last_operation, result):
+def left(operation, result):
     if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
         operation += "("
-    global operation_is_result
-    if operation_is_result:
-        operation = "("
-        last_operation += result
-        operation_is_result = False
-    return operation, last_operation, result
+    return operation, result
 
-def right(operation, last_operation, result):
+def right(operation, result):
     counter = 0
     for c in operation:
         counter += 1 if c == "(" else (-1 if c == ")" else 0)
     if counter > 0 and operation[-1] not in config.OPERATORS + ["("]:
         operation += ")"
-    return operation, last_operation, result
+    return operation, result
 
-def func(operation, last_operation, result, name):
+def func(operation, result, name):
     if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
         operation += name + "("
-    return operation, last_operation, result
+    return operation, result
 
-def back(operation, last_operation, result):
-    config.error = False
-    config.operation_font = config.font[60]
-    return last_operation, "", result
+def back(operation, result):
+    if config.operation_index > 0:
+        if config.error:
+            config.error = False
+        config.operation_index -= 1
+        stored_operation = config.operations[config.operation_index]
+        print(config.operations, config.operation_index)
+        return stored_operation[0], stored_operation[1]
+    else:
+        return operation, result
+
+def next(operation, result):
+    if config.operation_index < len(config.operations) - 1:
+        if config.error:
+            config.error = False
+        config.operation_index += 1
+        stored_operation = config.operations[config.operation_index]
+        print(config.operations, config.operation_index)
+        return stored_operation[0], stored_operation[1]
+    else:
+        return operation, result

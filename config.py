@@ -12,7 +12,7 @@ SIDE_MARGIN = 3 * MARGIN
 width_without_margins = WIDTH - MARGIN * (COLUMNS - 1) - 2 * SIDE_MARGIN
 SIDE_LENGTH = int(width_without_margins/COLUMNS) # convert it to int because if it is decimal it will add one pixel to one margin at some point
 SIDE_MARGIN = (WIDTH - (SIDE_LENGTH * COLUMNS + MARGIN * (COLUMNS - 1))) / 2 # recalculate it to center the buttons perectly because of the int() conversion of SIDE_LENGTH
-MARGIN_OPERATION = 30
+MARGIN_OPERATION = 20
 
 NUMBERS = '1234567890'
 OPERATORS = ["+", "-", "x", "/", "^"]
@@ -32,7 +32,7 @@ BLUE = (25, 85, 152)
 font = [pygame.font.Font(None, i) for i in range(100)]
 
 operation_font = font[60]
-last_operation_font = font[40]
+result_font = font[80]
 
 def merge(x1, y1, w1, h1, x2, y2, w2, h2):
     tot_width = (x2 + w2) - x1
@@ -79,6 +79,14 @@ cube = Button("x^3", *std_button, actions.sign, sign="^3")
 # sin   cos   tan   ln    logy
 # sin-1 cos-1 tan-1 log2  log10
 
+WIDTH_ARROWS = 30
+
+back = Button("<", GREY, LIGHT_GREY, WHITE, font[40], actions.back)
+back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN, SIDE_MARGIN, WIDTH_ARROWS, HEIGHT - 5 * SIDE_LENGTH - 4 * MARGIN - 3 * SIDE_MARGIN
+
+next = Button(">", GREY, LIGHT_GREY, WHITE, font[40], actions.next)
+next.x_i, next.y_i, next.width, next.height = WIDTH - SIDE_MARGIN - WIDTH_ARROWS, SIDE_MARGIN, WIDTH_ARROWS, HEIGHT - 5 * SIDE_LENGTH - 4 * MARGIN - 3 * SIDE_MARGIN
+
 buttons = []
 first_page = [
     [canc, DEL, left_bracket, right_bracket, other],
@@ -104,6 +112,7 @@ for y, row in enumerate(second_page):
                     if b == button:
                         break
             button.x_i, button.y_i, button.width, button.height = merge(b.x_i, b.y_i, b.width, b.height, *grid[y][x])
+buttons += [back, next]
 second_page = buttons
 
 buttons = []
@@ -118,10 +127,15 @@ for y, row in enumerate(first_page):
                     if b == button:
                         break
             button.x_i, button.y_i, button.width, button.height = merge(b.x_i, b.y_i, b.width, b.height, *grid[y][x])
-
+buttons += [back, next]
 first_page = buttons
 
-error = False
+neutral_buttons = [back, next, other]
+resetting_buttons = [b for b in first_page if b.action==actions.number] + [minus, left_bracket, ans, pi, e, e_power]
+# illegal_buttons = list((set(first_page) | set(second_page)) - set(neutral_buttons + resetting_buttons))
 
-back = Button("<- back", GREY, LIGHT_GREY, WHITE, font[40], actions.back)
-back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN + MARGIN_OPERATION, MARGIN_OPERATION, 3/2 * SIDE_LENGTH, 1/2 * SIDE_LENGTH
+error = False
+solved = False
+
+operations = []
+operation_index = -1
