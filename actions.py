@@ -53,8 +53,6 @@ def minus(operation, result):
 
 def equals(operation, result):
     result = solve(operation)
-    config.operations += [[operation, result]]
-    config.operation_index = len(config.operations) - 1
     config.solved = True
     return operation, result
 

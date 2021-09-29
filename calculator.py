@@ -6,8 +6,6 @@ pygame.init()
 screen = pygame.display.set_mode((config.WIDTH, config.HEIGHT))
 pygame.display.set_caption("Calculator")
 
-operation,result = "", ""
-
 # GAME CLOCK
 clock = pygame.time.Clock()
 game = True
@@ -38,14 +36,16 @@ while game:
                 if button.mouse_on_button(pos):
                     if config.solved:
                         if button in config.resetting_buttons:
-                            operation, result = button.action("", result, **button.args)
+                            config.operations += [list(button.action("", result, **button.args))]
+                            config.operation_index = len(config.operations) - 1
                             config.solved = False
                         elif button in config.neutral_buttons:
-                            operation, result = button.action(operation, result, **button.args)
+                            config.operations[config.operation_index] = list(button.action(operation, result, **button.args))
                     else:
-                        operation, result = button.action(operation, result, **button.args)
+                        config.operations[config.operation_index] = list(button.action(operation, result, **button.args))
                     break
-
+                    
+    operation, result = config.operations[config.operation_index]
     for font in config.font[config.MAX_OPERATION_FONT_SIZE::-1]:
         operation_render = font.render(operation, True, config.WHITE)
         operation_rect = operation_render.get_rect(topleft = (config.SIDE_MARGIN + config.WIDTH_ARROWS + config.MARGIN_OPERATION, config.SIDE_MARGIN + config.MARGIN_OPERATION))
@@ -54,7 +54,7 @@ while game:
     pygame.draw.rect(screen, config.BLACK, operation_rect)
     screen.blit(operation_render, operation_rect)
 
-    if config.solved:
+    if config.solved or config.operation_index != len(config.operations) - 1:
         for font in config.font[config.MAX_RESULT_FONT_SIZE::-1]:
             result_render = font.render(result, True, config.WHITE)
             result_rect = result_render.get_rect(bottomright = (config.WIDTH - config.SIDE_MARGIN - config.WIDTH_ARROWS - config.MARGIN_OPERATION, config.HEIGHT - 5 * config.SIDE_LENGTH - 4 * config.MARGIN - 2 * config.SIDE_MARGIN - config.MARGIN_OPERATION))

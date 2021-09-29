@@ -76,11 +76,6 @@ e_power = Button("e^", *std_button, actions.constant, n="2.1828^")
 square = Button("x^2", *std_button, actions.operator, sign="^2")
 cube = Button("x^3", *std_button, actions.operator, sign="^3")
 
-# pi    e     e^    ^2    ^3
-# root  3root yroot !     *10^
-# sin   cos   tan   ln    logy
-# sin-1 cos-1 tan-1 log2  log10
-
 back = Button("<", GREY, LIGHT_GREY, WHITE, font[40], actions.back)
 back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN, SIDE_MARGIN, WIDTH_ARROWS, HEIGHT - 5 * SIDE_LENGTH - 4 * MARGIN - 3 * SIDE_MARGIN
 
@@ -135,5 +130,5 @@ resetting_buttons = [b for b in first_page if b.action in [actions.number, actio
 error = False
 solved = False
 
-operations = []
-operation_index = -1
+operations = [["", ""]]
+operation_index = 0
