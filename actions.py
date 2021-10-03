@@ -1,109 +1,116 @@
 from solve import solve
 import config
 
-operation_is_result = False
-
-def number(operation, result, n):
-    if len(operation) == 0 or operation[-1] != ")":
-        operation += str(n)
-    return operation, result
-
-def constant(operation, result, n):
-    if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
-        operation += str(n)
-    return operation, result
-
-def canc(operation, result):
-    return "", result
-
-def decimal_point(operation, result):
-    last_decimal_point = -1
-    sign_after_last_decimal_point = False
-    for i in range(len(operation)):
-        if operation[i] == ".":
-            last_decimal_point = i
-    if last_decimal_point == -1:
-        sign_after_last_decimal_point = True
+def number(n):
+    if config.solved:
+        config.operations += [[str(n), ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
     else:
-        for i in range(last_decimal_point, len(operation)):
-            if operation[i] in config.OPERATORS:
-                sign_after_last_decimal_point = True
-    if sign_after_last_decimal_point and operation != "" and operation[-1] in config.NUMBERS:
-        operation += "."
-    return operation, result
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] != ")":
+            config.operations[-1][0] += str(n)
 
-def delete(operation, result):
-    if not operation_is_result:
-        operation = operation[:-1]
-    return operation, result
-
-def operator(operation, result, sign):
+def constant(n):
     if config.solved:
-        operation = result + sign
-    elif operation != "" and operation[-1] in config.NUMBERS + ")":
-        operation += sign
-    return operation, result
+        config.operations += [[str(n), ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    else:
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+            config.operations[-1][0] += str(n)
 
-def minus(operation, result):
+def canc():
     if config.solved:
-        operation = result + "-"
-    elif len(operation) == 0 or not (operation[-1] in config.OPERATORS and operation[-2] in config.OPERATORS):
-        operation += "-"
-    return operation, result
+        config.operations += [["", ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    else:
+        config.operations[-1][0] = ""
 
-def equals(operation, result):
-    result = solve(operation)
-    config.solved = True
-    return operation, result
+def decimal_point():
+    if not config.solved:
+        last_decimal_point = -1
+        sign_after_last_decimal_point = False
+        for i in range(len(config.operations[-1][0])):
+            if config.operations[-1][0][i] == ".":
+                last_decimal_point = i
+        if last_decimal_point == -1:
+            sign_after_last_decimal_point = True
+        else:
+            for i in range(last_decimal_point, len(config.operations[-1][0])):
+                if config.operations[-1][0][i] in config.OPERATORS:
+                    sign_after_last_decimal_point = True
+        if sign_after_last_decimal_point and config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS:
+            config.operations[-1][0] += "."
 
-def ans(operation, result):
-    if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
-        operation += str(result)
-    return operation, result
+def delete():
+    if config.solved:
+        config.operations += [[config.operations[config.operation_index][0][:-1], ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    else:
+        config.operations[-1][0] = config.operations[-1][0][:-1]
 
-def other(operation, result):
+def operator(sign):
+    if config.solved:
+        if not config.operations[config.operation_index][1].startswith("Error"):
+            config.operations += [[config.operations[config.operation_index][1] + sign, ""]]
+            config.operation_index = len(config.operations) - 1
+            config.solved = False
+    elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")":
+        config.operations[-1][0] += sign
+
+def minus():
+    if config.solved:
+        if not config.operations[config.operation_index][1].startswith("Error"):
+            config.operations += [[config.operations[config.operation_index][1] + "-", ""]]
+        else:
+            config.operations += [["-", ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    elif len(config.operations[-1][0]) == 0 or not (config.operations[-1][0][-1] in config.OPERATORS and config.operations[-1][0][-2] in config.OPERATORS):
+        config.operations[-1][0] += "-"
+
+def equals():
+    if not config.solved:
+        config.operations[-1][1] = solve(config.operations[-1][0])
+        config.solved = True
+
+def ans():
+    if not config.operations[-1][1].startswith("Error"):
+        if config.solved:
+            config.operations += [[config.operations[-1][1], ""]]
+            config.operation_index = len(config.operations) - 1
+            config.solved = False
+        elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+            config.operations[-1][0] += config.operations[-2][1]
+
+def other():
     if config.buttons == config.first_page:
         config.other.text = "1st"
         config.buttons = config.second_page
     else:
         config.other.text = "2nd"
         config.buttons = config.first_page
-    return operation, result
 
-def left(operation, result):
-    if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
-        operation += "("
-    return operation, result
+def left():
+    if config.solved:
+        config.operations += [["(", ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+        config.operations[-1][0] += "("
 
-def right(operation, result):
+def right():
     counter = 0
-    for c in operation:
-        counter += 1 if c == "(" else (-1 if c == ")" else 0)
-    if counter > 0 and operation[-1] not in config.OPERATORS + ["("]:
-        operation += ")"
-    return operation, result
+    if not config.solved:
+        for c in config.operations[-1][0]:
+            counter += 1 if c == "(" else (-1 if c == ")" else 0)
+        if counter > 0 and config.operations[-1][0][-1] not in config.OPERATORS + ["("]:
+            config.operations[-1][0] += ")"
 
-def func(operation, result, name):
-    if len(operation) == 0 or operation[-1] in config.OPERATORS + ["("]:
-        operation += name + "("
-    return operation, result
+def back():
+    config.operation_index -= 1
 
-def back(operation, result):
-    if config.operation_index > 0:
-        if config.error:
-            config.error = False
-        config.operation_index -= 1
-        stored_operation = config.operations[config.operation_index]
-        return stored_operation[0], stored_operation[1]
-    else:
-        return operation, result
-
-def next(operation, result):
-    if config.operation_index < len(config.operations) - 1:
-        if config.error:
-            config.error = False
-        config.operation_index += 1
-        stored_operation = config.operations[config.operation_index]
-        return stored_operation[0], stored_operation[1]
-    else:
-        return operation, result
+def next():
+    config.operation_index += 1

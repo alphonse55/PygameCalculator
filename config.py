@@ -123,11 +123,6 @@ for y, row in enumerate(first_page):
             button.x_i, button.y_i, button.width, button.height = merge(b.x_i, b.y_i, b.width, b.height, *grid[y][x])
 first_page = buttons
 
-neutral_buttons = [back, next, other]
-resetting_buttons = [b for b in first_page if b.action in [actions.number, actions.operator]] + [minus, left_bracket, ans, pi, e, e_power, canc]
-# illegal_buttons = list((set(first_page) | set(second_page)) - set(neutral_buttons + resetting_buttons))
-
-error = False
 solved = False
 
 operations = [["", ""]]
