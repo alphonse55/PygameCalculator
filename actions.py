@@ -114,3 +114,24 @@ def back():
 
 def next():
     config.operation_index += 1
+
+def root2():
+    if config.solved:
+        config.operations += [["√(", ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+        config.operations[-1][0] += "√("
+
+def root3():
+    if config.solved:
+        config.operations += [["3√(", ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+        config.operations[-1][0] += "3√("
+
+def rooty():
+    if not config.solved:
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.NUMBERS:
+            config.operations[-1][0] += "√("

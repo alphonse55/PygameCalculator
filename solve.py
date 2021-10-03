@@ -22,18 +22,39 @@ def solve(operation, depth = 0):
     if counter != 0:
         return error("not all parentheses are closed")
 
+    # transforming roots to exponents
+    radicals = True
+    while radicals:
+        for i, c in enumerate(operation):
+            if c == "√":
+                # find index
+                for j, d in enumerate(operation[:i-1:-1]):
+                    if d not in config.NUMBERS + ".":
+                        index = operation[j+1:i]
+                        break
+                # find expression
+                counter = 0
+                for k, e in enumerate(operation[i+1:]):
+                    counter += 1 if e == "(" else (-1 if e == ")" else 0)
+                    if counter == 0:
+                        expression = operation[i+2:i+2+k-1]
+                        break
+                
+                prefix = operation[:j+1]
+                suffix = operation[i+2+k:]
+
+                operation = f"{prefix}({expression})^(1/{index}){suffix}"
+            if i == len(operation) - 1:
+                radicals = False
+
     # handling parentheses
     for i in range(len(operation)):
         if operation[i] == "(":
-            left_counter = 1
-            right_counter = 0
+            counter = 1
             for j in range(i+1, len(operation)):
-                if operation[j] == "(":
-                    left_counter += 1
-                elif operation[j] == ")":
-                    right_counter += 1
-                    if right_counter == left_counter:
-                        break
+                counter += 1 if operation[j] == "(" else (-1 if operation[j] == ")" else 0)
+                if counter == 0:
+                    break
             
             solved_brackets = solve(operation[i+1:j], depth+1)
 
