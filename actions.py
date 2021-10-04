@@ -144,3 +144,12 @@ def factorial():
             config.solved = False
         else:
             config.operations[-1][0] += "!"
+
+def power_10():
+    if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + "!)":
+        if config.solved:
+            config.operations += [[config.operations[-1][0] + "x10^", ""]]
+            config.operation_index = len(config.operations) - 1
+            config.solved = False
+        else:
+            config.operations[-1][0] += "x10^"

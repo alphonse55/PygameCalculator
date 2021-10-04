@@ -80,6 +80,7 @@ root = Button("√", *std_button, actions.root2)
 root3 = Button("3√", *std_button, actions.root3)
 rooty = Button("y√", *std_button, actions.rooty)
 factorial = Button("!", *std_button, actions.factorial)
+power_10 = Button("x10^", *std_button, actions.power_10)
 
 back = Button("<", GREY, LIGHT_GREY, WHITE, font[40], actions.back)
 back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN, SIDE_MARGIN, WIDTH_ARROWS, HEIGHT - 5 * SIDE_LENGTH - 4 * MARGIN - 3 * SIDE_MARGIN
@@ -99,7 +100,7 @@ first_page = [
 second_page = [
     [canc, DEL, left_bracket, right_bracket, other],
     [pi, e, e_power, square, cube],
-    [root, root3, rooty, factorial],
+    [root, root3, rooty, factorial, power_10],
 ]
 
 for y, row in enumerate(second_page):
