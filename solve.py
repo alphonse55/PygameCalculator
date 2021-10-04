@@ -22,31 +22,63 @@ def solve(operation, depth = 0):
     if counter != 0:
         return error("not all parentheses are closed")
 
+    def factorial(n, d=0):
+        if n[-1] == "!":
+            n = factorial(n[:-1], d+1)
+            if n == "error":
+                return n
+            elif abs(round(n:=float(n)) - n) < 10 ** -7:
+                n = round(n)
+            else:
+                return "error"
+            r = 1
+            for i in range(n):
+                r *= i+1
+            return r
+        else:
+            return n
+    
     # transforming roots to exponents
     radicals = True
     while radicals:
         for i, c in enumerate(operation):
             if c == "√":
                 # find index
-                for j, d in enumerate(operation[:i-1:-1]):
+                # there is nothing to iterate through because the root is the first character
+                if len(operation[:i]) == 0:
+                    index = 2
+                    prefix = ""
+                # iterate through part of operation before the root (reversed)
+                for j, d in enumerate(reversed(operation[:i])):
+                    # there is a different character
                     if d not in config.NUMBERS + ".":
-                        index = operation[j+1:i]
+                        index = operation[i-j:i]
+                        # the first character before the root is not a number
+                        if index == "":
+                            index = 2
+                        prefix = operation[:i-j]
                         break
+                    # all symbols were numbers
+                    elif i-j == 1:
+                        index = operation[:i]
+                        prefix = ""
+                
                 # find expression
                 counter = 0
-                for k, e in enumerate(operation[i+1:]):
-                    counter += 1 if e == "(" else (-1 if e == ")" else 0)
+                for j, d in enumerate(operation[i+1:]):
+                    counter += 1 if d == "(" else (-1 if d == ")" else 0)
                     if counter == 0:
-                        expression = operation[i+2:i+2+k-1]
+                        expression = operation[i+2:i+2+j-1]
+                        suffix = operation[i+2+j:]
                         break
-                
-                prefix = operation[:j+1]
-                suffix = operation[i+2+k:]
 
-                operation = f"{prefix}({expression})^(1/{index}){suffix}"
+                # rewrite operation
+                operation = f"{prefix}(({expression})^(1/{index})){suffix}"
+                break
+
             if i == len(operation) - 1:
                 radicals = False
-
+    
     # handling parentheses
     for i in range(len(operation)):
         if operation[i] == "(":
@@ -114,6 +146,11 @@ def solve(operation, depth = 0):
         list1.insert(0, "0")
     operation = "".join(list1)
     operation = operation.split()
+
+    for i, n in enumerate(operation):
+        operation[i] = factorial(n)
+        if operation[i] == "error":
+            return error("can't take factorial of non-integer")
 
     for i in range(len(operators)):
         if operators[i] == "^":

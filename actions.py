@@ -7,7 +7,7 @@ def number(n):
         config.operation_index = len(config.operations) - 1
         config.solved = False
     else:
-        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] != ")":
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] not in ")!":
             config.operations[-1][0] += str(n)
 
 def constant(n):
@@ -16,7 +16,7 @@ def constant(n):
         config.operation_index = len(config.operations) - 1
         config.solved = False
     else:
-        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
             config.operations[-1][0] += str(n)
 
 def canc():
@@ -57,7 +57,7 @@ def operator(sign):
             config.operations += [[config.operations[config.operation_index][1] + sign, ""]]
             config.operation_index = len(config.operations) - 1
             config.solved = False
-    elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")":
+    elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!":
         config.operations[-1][0] += sign
 
 def minus():
@@ -82,7 +82,7 @@ def ans():
             config.operations += [[config.operations[-1][1], ""]]
             config.operation_index = len(config.operations) - 1
             config.solved = False
-        elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+        elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
             config.operations[-1][0] += config.operations[-2][1]
 
 def other():
@@ -98,7 +98,7 @@ def left():
         config.operations += [["(", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
-    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
         config.operations[-1][0] += "("
 
 def right():
@@ -106,7 +106,7 @@ def right():
     if not config.solved:
         for c in config.operations[-1][0]:
             counter += 1 if c == "(" else (-1 if c == ")" else 0)
-        if counter > 0 and config.operations[-1][0][-1] not in config.OPERATORS + ["("]:
+        if counter > 0 and config.operations[-1][0][-1] not in config.OPERATORS + list("("):
             config.operations[-1][0] += ")"
 
 def back():
@@ -120,7 +120,7 @@ def root2():
         config.operations += [["√(", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
-    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
         config.operations[-1][0] += "√("
 
 def root3():
@@ -128,10 +128,19 @@ def root3():
         config.operations += [["3√(", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
-    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + ["("]:
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
         config.operations[-1][0] += "3√("
 
 def rooty():
     if not config.solved:
-        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.NUMBERS:
-            config.operations[-1][0] += "√("
+        if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS:
+                config.operations[-1][0] += "√("
+
+def factorial():
+    if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + "!)":
+        if config.solved:
+            config.operations += [[config.operations[-1][0] + "!", ""]]
+            config.operation_index = len(config.operations) - 1
+            config.solved = False
+        else:
+            config.operations[-1][0] += "!"
