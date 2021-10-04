@@ -7,17 +7,17 @@ def number(n):
         config.operation_index = len(config.operations) - 1
         config.solved = False
     else:
-        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] not in ")!":
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] not in ")!eπ":
             config.operations[-1][0] += str(n)
 
 def constant(n):
     if config.solved:
-        config.operations += [[str(n), ""]]
+        config.operations += [[n, ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
     else:
         if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
-            config.operations[-1][0] += str(n)
+            config.operations[-1][0] += n
 
 def canc():
     if config.solved:
@@ -57,7 +57,7 @@ def operator(sign):
             config.operations += [[config.operations[config.operation_index][1] + sign, ""]]
             config.operation_index = len(config.operations) - 1
             config.solved = False
-    elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!":
+    elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!eπ":
         config.operations[-1][0] += sign
 
 def minus():
@@ -137,7 +137,7 @@ def rooty():
                 config.operations[-1][0] += "√("
 
 def factorial():
-    if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + "!)":
+    if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!eπ":
         if config.solved:
             config.operations += [[config.operations[-1][0] + "!", ""]]
             config.operation_index = len(config.operations) - 1
@@ -146,7 +146,7 @@ def factorial():
             config.operations[-1][0] += "!"
 
 def power_10():
-    if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + "!)":
+    if config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!eπ":
         if config.solved:
             config.operations += [[config.operations[-1][0] + "x10^", ""]]
             config.operation_index = len(config.operations) - 1

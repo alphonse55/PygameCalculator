@@ -37,10 +37,16 @@ def solve(operation, depth = 0):
             return r
         else:
             return n
+
+    # transofrming constants to floats
+    while "e" in operation or "π" in operation:
+        for i, c in enumerate(operation):
+            if c in "πe":
+                operation = operation[:i] + ("3.1415926535" if c == "π" else "2.718281828459045") + operation[i+1:]
+                break
     
     # transforming roots to exponents
-    radicals = True
-    while radicals:
+    while "√" in operation:
         for i, c in enumerate(operation):
             if c == "√":
                 # find index
@@ -75,9 +81,6 @@ def solve(operation, depth = 0):
                 # rewrite operation
                 operation = f"{prefix}(({expression})^(1/{index})){suffix}"
                 break
-
-            if i == len(operation) - 1:
-                radicals = False
     
     # handling parentheses
     for i in range(len(operation)):

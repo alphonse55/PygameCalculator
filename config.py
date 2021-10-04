@@ -70,9 +70,9 @@ equals = Button("=", DARK_BLUE, BLUE, WHITE, font[40], actions.equals)
 minus = Button("-", DARK_BLUE, BLUE, WHITE, font[40], actions.minus)
 divided = Button("/", DARK_BLUE, BLUE, WHITE, font[40], actions.operator, sign="/")
 
-pi = Button("π", *std_button, actions.constant, n="3.1416")
-e = Button("e", *std_button, actions.constant, n="2.1828")
-e_power = Button("e^", *std_button, actions.constant, n="2.1828^")
+pi = Button("π", *std_button, actions.constant, n="π")
+e = Button("e", *std_button, actions.constant, n="e")
+e_power = Button("e^", *std_button, actions.constant, n="e^")
 square = Button("x^2", *std_button, actions.operator, sign="^2")
 cube = Button("x^3", *std_button, actions.operator, sign="^3")
 
