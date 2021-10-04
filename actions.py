@@ -38,7 +38,7 @@ def decimal_point():
             sign_after_last_decimal_point = True
         else:
             for i in range(last_decimal_point, len(config.operations[-1][0])):
-                if config.operations[-1][0][i] in config.OPERATORS:
+                if config.operations[-1][0][i] in config.OPERATORS + list("√"):
                     sign_after_last_decimal_point = True
         if sign_after_last_decimal_point and config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS:
             config.operations[-1][0] += "."
