@@ -83,7 +83,11 @@ def ans():
             config.operation_index = len(config.operations) - 1
             config.solved = False
         elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
-            config.operations[-1][0] += config.operations[-2][1]
+            results = [o[1] for o in reversed(config.operations[:-1])]
+            for result in results:
+                if not result.startswith("Error"):
+                    config.operations[-1][0] += result
+                    break
 
 def other():
     if config.buttons == config.first_page:
