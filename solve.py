@@ -39,12 +39,15 @@ def solve(operation, depth = 0):
             return n
 
     # transofrming constants to floats
-    while "e" in operation or "π" in operation:
+    done = False
+    while not done:
         for i, c in enumerate(operation):
-            if c in "πe":
+            if c == "π" or (c == "e" and operation[i-1] not in config.NUMBERS):
                 operation = operation[:i] + ("3.1415926535" if c == "π" else "2.718281828459045") + operation[i+1:]
                 break
-    
+            if i == len(operation) - 1:
+                done = True
+
     # transforming roots to exponents
     while "√" in operation:
         for i, c in enumerate(operation):
@@ -139,7 +142,7 @@ def solve(operation, depth = 0):
 
     for i in range(len(operation)):
         if operation[i] in config.OPERATORS:
-            if i-1 not in operators_pos: # minus sign after another sign
+            if i-1 not in operators_pos and not (operation[i] == "+" and operation[i-1] == "e"): # minus sign after another sign
                 operators.append(operation[i])
                 operators_pos.append(i)
     list1 = list(operation)
@@ -202,35 +205,38 @@ def solve(operation, depth = 0):
             operation[i - len(to_pop)] = float(operation[i - len(to_pop)]) - float(operation[i + 1 - len(to_pop)])
             operation.pop(i + 1 - len(to_pop))
             to_pop.append(i)
-    
-    split_e = str(operation[0]).split("e")
-    operation = split_e[0]
 
-    # do rounding only for the first call of solve(), with depth = 0
-    precision = 5
-    if depth == 0 and "." in operation:
-        split_point = operation.split(".")
-        for i in range(len(split_point[1])):
-            if split_point[1][i:i + precision] == "0" * precision:
-                if i == 0:
-                    split_point[1] = "0"
-                else:
-                    split_point[1] = split_point[1][:i]
-                break
-            elif split_point[1][i:i + precision] == "9" * precision:
-                if i == 0:
-                    split_point[0] = str(int(split_point[0]) + 1)
-                    split_point[1] = "0"
-                else:
-                    split_point[1] = str(int(split_point[1][:i]) + 1)
-                break
+    operation = str(operation[0])
 
-        if split_point[1] == "0":
-            operation = split_point[0]
-        else:
-            operation = split_point[0] + "." + split_point[1][:4]
+    precision = 7
+    if depth == 0:
 
-    if len(split_e) > 1:
-        operation += "x10^" + split_e[1][1:]
-    
+        split_e = operation.split("e")
+        operation = split_e[0]
+
+        if "." in operation:
+            split_point = operation.split(".")
+            for i in range(len(split_point[1])):
+                if split_point[1][i:i + precision] == "0" * precision:
+                    if i == 0:
+                        split_point[1] = "0"
+                    else:
+                        split_point[1] = split_point[1][:i]
+                    break
+                elif split_point[1][i:i + precision] == "9" * precision:
+                    if i == 0:
+                        split_point[0] = str(int(split_point[0]) + 1)
+                        split_point[1] = "0"
+                    else:
+                        split_point[1] = str(int(split_point[1][:i]) + 1)
+                    break
+
+            if split_point[1] == "0":
+                operation = split_point[0]
+            else:
+                operation = split_point[0] + "." + split_point[1][:4]
+
+        if len(split_e) > 1:
+            operation += "x10^" + split_e[1][1:]
+
     return operation
