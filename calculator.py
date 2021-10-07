@@ -41,9 +41,9 @@ def transform(text):
                     if counter == 0 or i + 1 + j == len(text) - 1:
                         exponents += [[i+1, i+1+j+2]]
                         break
-            elif text[i+1] in config.NUMBERS:
+            elif text[i+1] in config.NUMBERS + "eπ":
                 for j, char in enumerate(text[i+1:]):
-                    if char not in config.NUMBERS + ".":
+                    if char not in config.NUMBERS + "eπ" + ".":
                         exponents += [[i+1, i+1+j+1]]
                         break
                     elif i + 1 + j == len(text) - 1:

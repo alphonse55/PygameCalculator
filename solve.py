@@ -1,26 +1,27 @@
 import config
 
-def solve(operation, depth = 0):
-    # return error message
-    def error(message):
-        config.error = True
-        return "Error: " + message
+# return error message
+def error(message):
+    config.error = True
+    return "Error: " + message
 
+# solve operation
+def solve(operation, depth = 0):
     # possible errors
     if operation == "":
-        return error("operation is empty")
+        return error("operation is empty.")
 
     elif operation[-1] in config.OPERATORS:
-        return error("ending with an operator")
+        return error("ending with an operator.")
     
     elif operation[-1] == "(":
-        return error("ending with an open parenthesis")
+        return error("ending with an open parenthesis.")
 
     counter = 0
     for c in operation:
         counter += 1 if c == "(" else (-1 if c == ")" else 0)
     if counter != 0:
-        return error("not all parentheses are closed")
+        return error("not all parentheses are closed.")
 
     def factorial(n, d=0):
         if n[-1] == "!":
@@ -42,8 +43,11 @@ def solve(operation, depth = 0):
     done = False
     while not done:
         for i, c in enumerate(operation):
-            if c == "π" or (c == "e" and operation[i-1] not in config.NUMBERS):
-                operation = operation[:i] + ("3.1415926535" if c == "π" else "2.718281828459045") + operation[i+1:]
+            if c == "π":
+                operation = operation[:i] + "3.1415926535" + operation[i+1:]
+                break
+            elif c == "e" and (i == 0 or operation[i-1] not in config.NUMBERS):
+                operation = operation[:i] + "2.718281828459045" + operation[i+1:]
                 break
             if i == len(operation) - 1:
                 done = True
@@ -108,7 +112,7 @@ def solve(operation, depth = 0):
                                 if operation[ind] in config.NUMBERS:
                                     exponent += operation[ind]
                                 elif operation[ind] == ".":
-                                    return error("cannot take fractional exponent of negative numbers")
+                                    return error("cannot take fractional exponent of negative numbers.")
                                 else:
                                     break
 
@@ -126,7 +130,7 @@ def solve(operation, depth = 0):
                                     break
                             exponent = solve(operation[ind+1:ind+k])
                             if "." in exponent:
-                                return error("cannot take fractional exponent of negative numbers")
+                                return error("cannot take fractional exponent of negative numbers.")
                             else:
                                 exponent = int(exponent)
 
@@ -139,24 +143,24 @@ def solve(operation, depth = 0):
     operators = []
     operators_pos = []
     to_pop = []
-
     for i in range(len(operation)):
         if operation[i] in config.OPERATORS:
-            if i-1 not in operators_pos and not (operation[i] == "+" and operation[i-1] == "e"): # minus sign after another sign
+            if operation[i-1] not in operators_pos and not (operation[i] == "+" and operation[i-1] == "e"): # minus sign after another sign
                 operators.append(operation[i])
                 operators_pos.append(i)
-    list1 = list(operation)
+    l = list(operation)
     for i in operators_pos:
-        list1[i] = " "
-    if list1[0] == " ":
-        list1.insert(0, "0")
-    operation = "".join(list1)
-    operation = operation.split()
-
-    for i, n in enumerate(operation):
-        operation[i] = factorial(n)
-        if operation[i] == "error":
-            return error("can't take factorial of non-integer")
+        l[i] = " "
+    if l[0] == " ":
+        l.insert(0, "0")
+    l = "".join(l).split()
+    operation = []
+    for n in l:
+        fac = factorial(n)
+        if fac == "error":
+            return error("cannot take factorial of non-integer.")
+        else:
+            operation += [str(float(fac))]
 
     for i in range(len(operators)):
         if operators[i] == "^":
@@ -208,7 +212,11 @@ def solve(operation, depth = 0):
 
     operation = str(operation[0])
 
+    if operation in ["inf", "-inf"]:
+        return error("result too large")
+
     precision = 7
+    rounding = 5
     if depth == 0:
 
         split_e = operation.split("e")
@@ -234,7 +242,7 @@ def solve(operation, depth = 0):
             if split_point[1] == "0":
                 operation = split_point[0]
             else:
-                operation = split_point[0] + "." + split_point[1][:4]
+                operation = split_point[0] + "." + split_point[1][:rounding]
 
         if len(split_e) > 1:
             operation += "x10^" + split_e[1][1:]
