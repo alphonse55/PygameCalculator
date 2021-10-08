@@ -1,4 +1,4 @@
-from solve import solve
+from solve import solve, error
 import config
 
 def number(n):
@@ -60,6 +60,34 @@ def operator(sign):
     elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!eπ":
         config.operations[-1][0] += sign
 
+def power(sign):
+    if config.solved:
+        if not config.operations[config.operation_index][1].startswith("Error"):
+            if "x" in config.operations[config.operation_index][1]:
+                config.operations += [["(" + config.operations[config.operation_index][1] + ")" + sign, ""]]
+            else:
+                config.operations += [[config.operations[config.operation_index][1] + sign, ""]]
+            config.operation_index = len(config.operations) - 1
+            config.solved = False
+    elif config.operations[-1][0] != "" and config.operations[-1][0][-1] in config.NUMBERS + ")!eπ":
+        for i, c in enumerate(config.operations[-1][0][::-1]):
+            if c in config.OPERATORS:
+                if c == "^":
+                    # temporary way to handle tower of exponents which basically blocks them by adding parentheses
+                    for j, d in enumerate(config.operations[-1][0][-i-1::-1]):
+                        if d in list(set(config.OPERATORS) - {"^"}):
+                            cut = - i - j
+                            break
+                    else:
+                        cut = 0
+                    config.operations[-1][0] = config.operations[-1][0][:cut] + "(" + config.operations[-1][0][cut:] + ")^"
+                    break
+                else:
+                    config.operations[-1][0] += sign
+                    break
+        else:
+            config.operations[-1][0] += sign
+
 def minus():
     if config.solved:
         if not config.operations[config.operation_index][1].startswith("Error"):
@@ -73,7 +101,10 @@ def minus():
 
 def equals():
     if not config.solved:
-        config.operations[-1][1] = solve(config.operations[-1][0])
+        try:
+            config.operations[-1][1] = solve(config.operations[-1][0])
+        except OverflowError:
+            config.operations[-1][1] = error("result too large.")
         config.solved = True
 
 def ans():
