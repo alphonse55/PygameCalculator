@@ -129,11 +129,18 @@ def other():
         config.buttons = config.first_page
 
 def left():
+    for i, c in enumerate(config.operations[-1][0][::-1]):
+        if c in config.OPERATORS + list("("):
+            i = len(config.operations[-1][0][::-1]) - i - 1
+            break
+    else:
+        i = -1
+        
     if config.solved:
         config.operations += [["(", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
-    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
+    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("(") or (config.operations[-1][0][-1] in config.NUMBERS and i < config.operations[-1][0].index("log")):
         config.operations[-1][0] += "("
 
 def right():
@@ -188,3 +195,17 @@ def power_10():
             config.solved = False
         else:
             config.operations[-1][0] += "x10^"
+
+def func(func):
+    if func == "logy":
+        func = "log"
+    else:
+        func += "("
+
+    if config.solved:
+        config.operations += [[func, ""]]
+        config.operation_index = len(config.operations) - 1
+        config.solved = False
+    else:
+        if len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
+            config.operations[-1][0] += func

@@ -1,4 +1,5 @@
 import config
+import math
 
 # return error message
 def error(message):
@@ -39,18 +40,67 @@ def solve(operation, depth = 0):
         else:
             return n
 
-    # transofrming constants to floats
+    # transforming constants to floats
     done = False
     while not done:
         for i, c in enumerate(operation):
             if c == "π":
-                operation = operation[:i] + "3.1415926535" + operation[i+1:]
+                operation = operation[:i] + config.pi + operation[i+1:]
                 break
             elif c == "e" and (i == 0 or operation[i-1] not in config.NUMBERS):
-                operation = operation[:i] + "2.718281828459045" + operation[i+1:]
+                operation = operation[:i] + config.e + operation[i+1:]
                 break
             if i == len(operation) - 1:
                 done = True
+    # transforming ln to log e
+    while "ln" in operation:
+        i = operation.index("ln")
+        operation = operation[:i] + "log" + config.e + operation[i+2:]
+
+    # solving logs
+    def log(base, arg):
+        return math.log(arg)/math.log(base) # change of base formula
+
+    while "log" in operation:
+        i = operation.index("log")
+        for a, c in enumerate(operation[i:]):
+            if c == "(":
+                j = i + a + 1
+        counter = 1
+        for a, c in enumerate(operation[j:]):
+            counter += 1 if c == "(" else (-1 if c == ")" else 0)
+            if counter == 0:
+                k = j + a
+                break
+        
+        prefix = operation[:i]
+        suffix = operation[k+1:]
+        base = operation[i+3:j-1]
+        arg = operation[j:k]
+        try:
+            operation = prefix + str(log(float(base), float(solve(arg, depth = depth+1)))) + suffix
+        except ValueError:
+                return error(f"invalid input for logarithm")
+    
+    # solving trig functions
+    for func in sorted(config.trig, key = len)[::-1]: # sort by decresing length to first check for inverse functions
+        if func in operation:
+            i = operation.index(func)
+            j = i + len(func) + 1
+
+            counter = 1
+            for a, c in enumerate(operation[j:]):
+                counter += 1 if c == "(" else (-1 if c == ")" else 0)
+                if counter == 0:
+                    k = j + a
+                    break
+
+            prefix = operation[:i]
+            suffix = operation[k+1:]
+            try:
+                operation = prefix + str(round(getattr(math, func)(float(solve(operation[j:k], depth+1))), 8)) + suffix
+            except ValueError:
+                return error(f"invalid input for {func}")
 
     # transforming roots to exponents
     while "√" in operation:

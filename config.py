@@ -1,6 +1,7 @@
 import pygame
 from Button import Button
 import actions
+import math
 
 pygame.init()
 
@@ -70,8 +71,9 @@ equals = Button("=", DARK_BLUE, BLUE, WHITE, font[40], actions.equals)
 minus = Button("-", DARK_BLUE, BLUE, WHITE, font[40], actions.minus)
 divided = Button("/", DARK_BLUE, BLUE, WHITE, font[40], actions.operator, sign="/")
 
-pi = Button("π", *std_button, actions.constant, n="π")
-e = Button("e", *std_button, actions.constant, n="e")
+pi, e = map(str, (math.pi, math.e))
+pi_btn = Button("π", *std_button, actions.constant, n="π")
+e_btn = Button("e", *std_button, actions.constant, n="e")
 e_power = Button("e^", *std_button, actions.constant, n="e^")
 square = Button("x^2", *std_button, actions.power, sign="^2")
 cube = Button("x^3", *std_button, actions.power, sign="^3")
@@ -81,6 +83,19 @@ root3 = Button("3√x", *std_button, actions.root3)
 rooty = Button("y√x", *std_button, actions.rooty)
 factorial = Button("!", *std_button, actions.factorial)
 power_10 = Button("x10^", *std_button, actions.power_10)
+
+# functions = {"sin": math.sin, "cos": math.cos, "tan": math.tan, "ln": math.log, "log": math.log, "asin": math.asin, "acos": math.acos, "atan": math.atan, "log2": math.log2, "log10": math.log10}
+# functions = ["sin", "cos", "tan", "ln", "log", "asin", "acos", "atan", "log2", "log10"]
+trig = ["sin", "cos", "tan", "asin", "acos", "atan"]
+logs = ["ln", "logy", "log2", "log10"]
+# function_buttons = []
+trig_buttons = []
+logs_buttons = []
+
+for func in trig:
+    trig_buttons += [Button(func, *std_button, actions.func, func = func)]
+for func in logs:
+    logs_buttons += [Button(func, *std_button, actions.func, func = func)]
 
 back = Button("<", GREY, LIGHT_GREY, WHITE, font[40], actions.back)
 back.x_i, back.y_i, back.width, back.height = SIDE_MARGIN, SIDE_MARGIN, WIDTH_ARROWS, HEIGHT - 5 * SIDE_LENGTH - 4 * MARGIN - 3 * SIDE_MARGIN
@@ -99,8 +114,10 @@ first_page = [
 
 second_page = [
     [canc, DEL, left_bracket, right_bracket, other],
-    [pi, e, e_power, square, cube],
+    [pi_btn, e_btn, e_power, square, cube],
     [root, root3, rooty, factorial, power_10],
+    trig_buttons[:3] + logs_buttons[:2],
+    trig_buttons[3:] + logs_buttons[2:]
 ]
 
 for y, row in enumerate(second_page):
