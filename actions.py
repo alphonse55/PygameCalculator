@@ -129,18 +129,18 @@ def other():
         config.buttons = config.first_page
 
 def left():
-    for i, c in enumerate(config.operations[-1][0][::-1]):
-        if c in config.OPERATORS + list("("):
-            i = len(config.operations[-1][0][::-1]) - i - 1
+    for last_bracket, c in enumerate(config.operations[-1][0][::-1]):
+        if c == "(":
+            last_bracket = len(config.operations[-1][0][::-1]) - last_bracket - 1
             break
     else:
-        i = -1
+        last_bracket = -1
         
     if config.solved:
         config.operations += [["(", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
-    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("(") or (config.operations[-1][0][-1] in config.NUMBERS and i < config.operations[-1][0].index("log")):
+    elif (len(config.operations[-1][0]) == 0) or (config.operations[-1][0][-1] in config.OPERATORS + list("(")) or (("log" in config.operations[-1][0]) and (config.operations[-1][0][-1] in config.NUMBERS) and (last_bracket < config.operations[-1][0].index("log"))):
         config.operations[-1][0] += "("
 
 def right():

@@ -42,8 +42,22 @@ def transform(text):
 
     for i, exponent in enumerate(exponents):
         text.remove("^")
-        text.insert(exponent[0] + i - 1, "*") #
+        text.insert(exponent[0] + i - 1, "*")
         text.insert(exponent[1] + i - 1, "*")
+
+    logs = []
+    for i in range(len(text)):
+        if text[i:i+3] == list("log"):
+            for j, c in enumerate(text[i:]):
+                if c == "(":
+                    break
+            else:
+                j+=1
+            logs += [[i+3, i+j+1]]
+    
+    for i, log in enumerate(logs):
+        text.insert(log[0], "_")
+        text.insert(log[1], "_")
 
     text = "".join(text)
     return text
