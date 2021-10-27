@@ -60,7 +60,6 @@ def solve(operation, depth = 0):
     # solving logs
     def log(base, arg):
         return math.log(arg)/math.log(base) # change of base formula
-
     while "log" in operation:
         i = operation.index("log")
         for a, c in enumerate(operation[i:]):
@@ -138,7 +137,24 @@ def solve(operation, depth = 0):
                 # rewrite operation
                 operation = f"{prefix}(({expression})^(1/{index})){suffix}"
                 break
-    
+
+    # putting parentheses around negative exponents
+    while "^-" in operation:
+        for i in range(len(operation)):
+            if operation[i:i+2] == "^-":
+                operation = list(operation)
+                operation.insert(i+1, "(")
+                for j, c in enumerate(operation[i+3:]):
+                    print(c)
+                    if c not in config.NUMBERS + ".":
+                        ind = i+j+3
+                        break
+                else:
+                    ind = len(operation)
+                operation.insert(ind, ")")
+                operation = "".join(operation)
+                break
+
     # handling parentheses
     for i in range(len(operation)):
         if operation[i] == "(":
@@ -147,48 +163,60 @@ def solve(operation, depth = 0):
                 counter += 1 if operation[j] == "(" else (-1 if operation[j] == ")" else 0)
                 if counter == 0:
                     break
-            
             solved_brackets = solve(operation[i+1:j], depth+1)
 
-            # handling negative bases in parentheses
+            # handling special cases
             if float(solved_brackets) < 0:
-                if j < len(operation) - 1:
-                    if operation[j+1] == "^":
-                        #finding exponent
-                        ind = j+2
-                        exponent = ""
-                        if operation[ind] in config.NUMBERS:
-                            while True:
-                                if operation[ind] in config.NUMBERS:
-                                    exponent += operation[ind]
-                                elif operation[ind] == ".":
-                                    return error("cannot take fractional exponent of negative numbers.")
-                                else:
-                                    break
-
-                                if ind < len(operation) - 1:
-                                    ind += 1
-                                else:
-                                    break
-                            exponent = int(exponent)
-
-                        elif operation[ind] == "(":
-                            counter = 0
-                            for k, char in enumerate(operation[ind:]):
-                                counter += 1 if char == "(" else (-1 if char == ")" else 0)
-                                if counter == 0:
-                                    break
-                            exponent = solve(operation[ind+1:ind+k])
-                            if "." in exponent:
+                # negative base in parentheses
+                if j < len(operation) - 1 and operation[j+1] == "^":
+                    # finding exponent
+                    ind = j+2
+                    exponent = ""
+                    if operation[ind] in config.NUMBERS:
+                        while True:
+                            if operation[ind] in config.NUMBERS:
+                                exponent += operation[ind]
+                            elif operation[ind] == ".":
                                 return error("cannot take fractional exponent of negative numbers.")
                             else:
-                                exponent = int(exponent)
+                                break
 
-                        # inverting result if needed
-                        if exponent % 2 == 0:
-                            solved_brackets = str(-float(solved_brackets))
-            
+                            if ind < len(operation) - 1:
+                                ind += 1
+                            else:
+                                break
+                        exponent = int(exponent)
+
+                    elif operation[ind] == "(":
+                        counter = 0
+                        for k, char in enumerate(operation[ind:]):
+                            counter += 1 if char == "(" else (-1 if char == ")" else 0)
+                            if counter == 0:
+                                break
+                        exponent = solve(operation[ind+1:ind+k])
+                        if "." in exponent:
+                            return error("cannot take fractional exponent of negative numbers.")
+                        else:
+                            exponent = int(exponent)
+
+                    # negating solved_brackets if needed
+                    if exponent % 2 == 0:
+                        solved_brackets = str(-float(solved_brackets))
+                
+                # negative power
+                elif operation[i-1] == "^":
+                    # finding base
+                    for k, c in enumerate(operation[i-2::-1]):
+                        if c in config.OPERATORS:
+                            ind = i-k-1
+                            break
+                    else:
+                        ind = 0
+                    base = operation[ind:i-1]
+                    return solve(f"{operation[:ind]}1/({base}^{str(solved_brackets)[1:]}){operation[i+j-1:]}", depth)
+
             return solve(operation[:i] + solved_brackets + operation[j+1:], depth)
+                    
 
     operators = []
     operators_pos = []
