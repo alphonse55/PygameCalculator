@@ -96,7 +96,7 @@ def minus():
             config.operations += [["-", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
-    elif len(config.operations[-1][0]) == 0 or not (config.operations[-1][0][-1] in config.OPERATORS and config.operations[-1][0][-2] in config.OPERATORS):
+    elif len(config.operations[-1][0]) == 0 or not (config.operations[-1][0][-1] in config.OPERATORS and (len(config.operations[-1][0]) > 1 and config.operations[-1][0][-2] in config.OPERATORS)):
         config.operations[-1][0] += "-"
 
 def equals():

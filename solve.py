@@ -215,15 +215,15 @@ def solve(operation, depth = 0):
                     base = operation[ind:i-1]
                     return solve(f"{operation[:ind]}1/({base}^{str(solved_brackets)[1:]}){operation[i+j-1:]}", depth)
 
-            return solve(operation[:i] + solved_brackets + operation[j+1:], depth)
-                    
+            return solve(operation[:i] + solved_brackets + operation[j+1:], depth)  
+
 
     operators = []
     operators_pos = []
     to_pop = []
     for i in range(len(operation)):
         if operation[i] in config.OPERATORS:
-            if operation[i-1] not in operators_pos and not (operation[i] == "+" and operation[i-1] == "e"): # minus sign after another sign
+            if i-1 not in operators_pos and not (operation[i] == "+" and operation[i-1] == "e"): # minus sign after another sign
                 operators.append(operation[i])
                 operators_pos.append(i)
     l = list(operation)
