@@ -2,6 +2,9 @@ import config
 import pygame
 
 def transform(text):
+    if text.startswith("Error"):
+        return text
+        
     text = list(text)
 
     roots = []
@@ -15,6 +18,7 @@ def transform(text):
                     break
                 elif j == i - 1:
                     roots += [[i, i-j-1]]
+                    
     for i, root in enumerate(roots):
         text.insert(root[0] + i*2, "*")
         text.insert(root[1] + i*2, "*")
@@ -39,6 +43,15 @@ def transform(text):
                     elif i + 1 + j == len(text) - 1:
                         exponents += [[i+1, i+1+j+2]]
                         break
+            elif any(["".join(text[i+1:]).startswith(func) for func in config.trig+["ln"]]):
+                counter = 0
+                for j, c in enumerate(text[i+1:]):
+                    counter += 1 if c == "(" else (-1 if c == ")" else 0)
+                    if counter == 0 and j > 3:
+                        exponents += [[i+1, i+1+j+2]]
+                        break
+                else:
+                    exponents += [[i+1, len(text)+1]]
 
     for i, exponent in enumerate(exponents):
         text.remove("^")

@@ -157,21 +157,21 @@ def back():
 def next():
     config.operation_index += 1
 
-def root2():
+def root(n):
     if config.solved:
-        config.operations += [["√(", ""]]
+        config.operations += [[f"{n if n>2 else ''}√(", ""]]
         config.operation_index = len(config.operations) - 1
         config.solved = False
     elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
-        config.operations[-1][0] += "√("
+        config.operations[-1][0] += f"{n if n>2 else ''}√("
 
-def root3():
-    if config.solved:
-        config.operations += [["3√(", ""]]
-        config.operation_index = len(config.operations) - 1
-        config.solved = False
-    elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
-        config.operations[-1][0] += "3√("
+# def root3():
+#     if config.solved:
+#         config.operations += [["3√(", ""]]
+#         config.operation_index = len(config.operations) - 1
+#         config.solved = False
+#     elif len(config.operations[-1][0]) == 0 or config.operations[-1][0][-1] in config.OPERATORS + list("("):
+#         config.operations[-1][0] += "3√("
 
 def rooty():
     if not config.solved:
